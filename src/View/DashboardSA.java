@@ -231,15 +231,18 @@ public class DashboardSA extends javax.swing.JFrame {
     }//GEN-LAST:event_BTNhomeActionPerformed
 
     private void BTNdosenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNdosenActionPerformed
-        // TODO add your handling code here:
+        new dosenSA().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_BTNdosenActionPerformed
 
     private void BTNmahasiswa1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNmahasiswa1ActionPerformed
-        // TODO add your handling code here:
+        new mahasiswaSA().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_BTNmahasiswa1ActionPerformed
 
     private void BTNmatkul1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNmatkul1ActionPerformed
-        // TODO add your handling code here:
+        new matkulSA().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_BTNmatkul1ActionPerformed
 
     /**
