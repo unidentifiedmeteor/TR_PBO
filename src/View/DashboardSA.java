@@ -82,7 +82,7 @@ public class DashboardSA extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(BTNmahasiswa1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(BTNmahasiswa1, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
                     .addComponent(BTNhome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(BTNdosen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -112,8 +112,10 @@ public class DashboardSA extends javax.swing.JFrame {
         JMLmahasiswa.setBackground(new java.awt.Color(2, 72, 193));
 
         label1.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        label1.setForeground(new java.awt.Color(255, 255, 255));
         label1.setText("6243");
 
+        label2.setForeground(new java.awt.Color(255, 255, 255));
         label2.setText("Mahasiswa");
 
         javax.swing.GroupLayout JMLmahasiswaLayout = new javax.swing.GroupLayout(JMLmahasiswa);
@@ -142,9 +144,11 @@ public class DashboardSA extends javax.swing.JFrame {
         JMLmahasiswa1.setBackground(new java.awt.Color(2, 72, 193));
         JMLmahasiswa1.setPreferredSize(new java.awt.Dimension(118, 80));
 
+        label4.setForeground(new java.awt.Color(255, 255, 255));
         label4.setText("Dosen");
 
         label3.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        label3.setForeground(new java.awt.Color(255, 255, 255));
         label3.setText("233");
 
         javax.swing.GroupLayout JMLmahasiswa1Layout = new javax.swing.GroupLayout(JMLmahasiswa1);
@@ -152,7 +156,7 @@ public class DashboardSA extends javax.swing.JFrame {
         JMLmahasiswa1Layout.setHorizontalGroup(
             JMLmahasiswa1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JMLmahasiswa1Layout.createSequentialGroup()
-                .addContainerGap(44, Short.MAX_VALUE)
+                .addContainerGap(45, Short.MAX_VALUE)
                 .addGroup(JMLmahasiswa1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(label4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(label3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -171,8 +175,10 @@ public class DashboardSA extends javax.swing.JFrame {
         JMLmahasiswa2.setBackground(new java.awt.Color(2, 72, 193));
 
         label5.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        label5.setForeground(new java.awt.Color(255, 255, 255));
         label5.setText("122");
 
+        label6.setForeground(new java.awt.Color(255, 255, 255));
         label6.setText("Matkul");
 
         javax.swing.GroupLayout JMLmahasiswa2Layout = new javax.swing.GroupLayout(JMLmahasiswa2);
