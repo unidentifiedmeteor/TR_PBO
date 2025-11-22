@@ -8,14 +8,18 @@ package View;
  *
  * @author Lenovo
  */
-public class dashboardMahasiswa extends javax.swing.JFrame {
+public class DashboardMahasiswa extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(dashboardMahasiswa.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DashboardMahasiswa.class.getName());
 
     /**
-     * Creates new form dashboardMahasiswa
+     * Creates new form DashboardMahasiswa
      */
-    public dashboardMahasiswa() {
+    public DashboardMahasiswa() {
+        initComponents();
+    }
+
+    DashboardMahasiswa(String id) {
         initComponents();
     }
 
@@ -66,7 +70,7 @@ public class dashboardMahasiswa extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new dashboardMahasiswa().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new DashboardMahasiswa().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

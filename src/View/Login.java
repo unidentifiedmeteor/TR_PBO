@@ -152,9 +152,9 @@ public class Login extends javax.swing.JFrame {
         case DOSEN:
             new dashboardDosen(result.getId()).setVisible(true);
             break;
-//        case MAHASISWA:
-//            new DashboardMahasiswa(result.getId()).setVisible(true);
-//            break;
+        case MAHASISWA:
+            new DashboardMahasiswa(result.getId()).setVisible(true);
+            break;
         default:
             JOptionPane.showMessageDialog(this, "Role tidak dikenali.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
