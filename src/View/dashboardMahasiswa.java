@@ -8,14 +8,14 @@ package View;
  *
  * @author Lenovo
  */
-public class matkulSA extends javax.swing.JFrame {
+public class dashboardMahasiswa extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(matkulSA.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(dashboardMahasiswa.class.getName());
 
     /**
-     * Creates new form matkulSA
+     * Creates new form dashboardMahasiswa
      */
-    public matkulSA() {
+    public dashboardMahasiswa() {
         initComponents();
     }
 
@@ -66,7 +66,7 @@ public class matkulSA extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new matkulSA().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new dashboardMahasiswa().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
