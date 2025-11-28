@@ -4,13 +4,11 @@
  */
 package View;
 
-import Model.koneksi;
 import java.awt.Component;
-import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.*;
-import Controller.MahasiswaController;
-import Model.MahasiswaMod;
+import Controller.MahasiswaSAController;
+import Model.MahasiswaSAMod;
 import Model.MahasiswaDAO;
 import java.util.List;
 import javax.swing.SwingWorker;
@@ -22,14 +20,14 @@ import javax.swing.SwingWorker;
 public class mahasiswaSA extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(mahasiswaSA.class.getName());
-    private final MahasiswaController controller;
+    private final MahasiswaSAController controller;
 
     /**
      * Creates new form mahasiswaSA
      */
     public mahasiswaSA() {
         initComponents();
-        this.controller = new MahasiswaController(new MahasiswaDAO());
+        this.controller = new MahasiswaSAController(new MahasiswaDAO());
         loadTableMahasiswa();
     }
 
@@ -53,16 +51,16 @@ public class mahasiswaSA extends javax.swing.JFrame {
             jTable1.getColumnModel().getColumn(2).setPreferredWidth(50);  // IPK
             jTable1.getColumnModel().getColumn(3).setPreferredWidth(80);  // Button KST
             
-            new SwingWorker<List<MahasiswaMod>, Void>() {
+            new SwingWorker<List<MahasiswaSAMod>, Void>() {
             @Override
-            protected List<MahasiswaMod> doInBackground() throws Exception {
+            protected List<MahasiswaSAMod> doInBackground() throws Exception {
                 return controller.getAllMahasiswa(); // DAO call is inside controller
             }
             @Override
             protected void done() {
                 try {
-                    List<MahasiswaMod> rows = get();
-                    for (MahasiswaMod m : rows) {
+                    List<MahasiswaSAMod> rows = get();
+                    for (MahasiswaSAMod m : rows) {
                         model.addRow(new Object[]{m.getNim(), m.getNama(), m.getIpk(), "Lihat"});
                     }
                 } catch (Exception ex) {

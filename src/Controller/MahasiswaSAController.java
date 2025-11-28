@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Controller;
-import Model.MahasiswaMod;
+import Model.MahasiswaSAMod;
 import Model.MahasiswaDAO;
 import java.util.List;
 
@@ -13,14 +13,14 @@ import java.util.List;
  */
 
 
-public class MahasiswaController {
+public class MahasiswaSAController {
     private final MahasiswaDAO dao;
 
-    public MahasiswaController(MahasiswaDAO dao) {
+    public MahasiswaSAController(MahasiswaDAO dao) {
         this.dao = dao;
     }
 
-    public List<MahasiswaMod> getAllMahasiswa() throws Exception {
+    public List<MahasiswaSAMod> getAllMahasiswa() throws Exception {
         return dao.findAll();
     }
 

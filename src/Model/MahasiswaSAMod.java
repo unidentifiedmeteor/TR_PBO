@@ -9,13 +9,13 @@ package Model;
  * @author Lenovo
  */
 
-//Nyimpan data MahasiswaMod
-public class MahasiswaMod {
+//Nyimpan data MahasiswaSAMod
+public class MahasiswaSAMod {
     private String nim;
     private String nama;
     private Double ipk;
 
-    public MahasiswaMod(String nim, String nama, Double ipk) {
+    public MahasiswaSAMod(String nim, String nama, Double ipk) {
         this.nim = nim;
         this.nama = nama;
         this.ipk = ipk;
