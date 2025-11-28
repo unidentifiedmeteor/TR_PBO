@@ -17,12 +17,10 @@ public class DashboardSA extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DashboardSA.class.getName());
 
     private void loadCounts() {
-        // If your table names are different, change them here
         int jumlahMahasiswa = getRowCount("mahasiswa");
         int jumlahDosen = getRowCount("dosen");
         int jumlahMatkul = getRowCount("matkul");
 
-        // label1, label3, label5 are java.awt.Label in your generated code
         label1.setText(String.valueOf(jumlahMahasiswa));
         label3.setText(String.valueOf(jumlahDosen));
         label5.setText(String.valueOf(jumlahMatkul));
@@ -38,8 +36,6 @@ public class DashboardSA extends javax.swing.JFrame {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            // optionally set a visible fallback
-            // e.g. label1.setText("ERR"); but avoid touching labels here (we update in loadCounts)
         }
         return count;
     }
