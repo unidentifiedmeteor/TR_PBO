@@ -10,7 +10,7 @@ import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import Controller.MahasiswaController;
-import Model.Mahasiswa;
+import Model.MahasiswaMod;
 import Model.MahasiswaDAO;
 import java.util.List;
 import javax.swing.SwingWorker;
@@ -53,16 +53,16 @@ public class mahasiswaSA extends javax.swing.JFrame {
             jTable1.getColumnModel().getColumn(2).setPreferredWidth(50);  // IPK
             jTable1.getColumnModel().getColumn(3).setPreferredWidth(80);  // Button KST
             
-            new SwingWorker<List<Mahasiswa>, Void>() {
+            new SwingWorker<List<MahasiswaMod>, Void>() {
             @Override
-            protected List<Mahasiswa> doInBackground() throws Exception {
+            protected List<MahasiswaMod> doInBackground() throws Exception {
                 return controller.getAllMahasiswa(); // DAO call is inside controller
             }
             @Override
             protected void done() {
                 try {
-                    List<Mahasiswa> rows = get();
-                    for (Mahasiswa m : rows) {
+                    List<MahasiswaMod> rows = get();
+                    for (MahasiswaMod m : rows) {
                         model.addRow(new Object[]{m.getNim(), m.getNama(), m.getIpk(), "Lihat"});
                     }
                 } catch (Exception ex) {

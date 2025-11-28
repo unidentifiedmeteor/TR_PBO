@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Controller;
-import Model.Mahasiswa;
+import Model.MahasiswaMod;
 import Model.MahasiswaDAO;
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class MahasiswaController {
         this.dao = dao;
     }
 
-    public List<Mahasiswa> getAllMahasiswa() throws Exception {
+    public List<MahasiswaMod> getAllMahasiswa() throws Exception {
         return dao.findAll();
     }
 

@@ -4,9 +4,9 @@
  */
 package View;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import Controller.DashboardSAController;
+import Model.DashboardSAMod;
+
 
 /**
  *
@@ -15,37 +15,37 @@ import java.sql.Statement;
 public class DashboardSA extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DashboardSA.class.getName());
+    private Controller.DashboardSAController controller;
 
-    private void loadCounts() {
-        int jumlahMahasiswa = getRowCount("mahasiswa");
-        int jumlahDosen = getRowCount("dosen");
-        int jumlahMatkul = getRowCount("matkul");
-
-        label1.setText(String.valueOf(jumlahMahasiswa));
-        label3.setText(String.valueOf(jumlahDosen));
-        label5.setText(String.valueOf(jumlahMatkul));
+    public void setController(Controller.DashboardSAController controller) {
+        this.controller = controller;
+        BTNdosen.addActionListener(e -> this.controller.openDosen());
+        BTNmahasiswa1.addActionListener(e -> this.controller.openMahasiswa());
+        BTNmatkul1.addActionListener(e -> this.controller.openMatkul());
     }
 
-    private int getRowCount(String tableName) {
-        int count = 0;
-        String sql = "SELECT COUNT(*) AS total FROM " + tableName;
-        try (Connection conn = Model.koneksi.getConnection(); Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(sql)) {
-
-            if (rs.next()) {
-                count = rs.getInt("total");
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return count;
+    public void setMahasiswaCount(int count) {
+        label1.setText(String.valueOf(count));
     }
+
+    public void setDosenCount(int count) {
+        label3.setText(String.valueOf(count));
+    }
+
+    public void setMatkulCount(int count) {
+        label5.setText(String.valueOf(count));
+    }
+
+    public void showError(String message) {
+        javax.swing.JOptionPane.showMessageDialog(this, message, "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+    }
+
 
     /**
      * Creates new form DashboardSA
      */
     public DashboardSA() {
         initComponents();
-        loadCounts();
     }
 
     DashboardSA(String id) {
@@ -306,7 +306,14 @@ public class DashboardSA extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new DashboardSA().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> {
+        DashboardSA view = new DashboardSA();
+        DashboardSAMod model = new DashboardSAMod();
+        DashboardSAController controller = new DashboardSAController(model, view);
+        view.setController(controller);
+        view.setVisible(true);
+        controller.loadCounts(); // start loading
+    });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
