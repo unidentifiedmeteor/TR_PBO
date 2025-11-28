@@ -19,9 +19,6 @@ public class DashboardSA extends javax.swing.JFrame {
 
     public void setController(Controller.DashboardSAController controller) {
         this.controller = controller;
-        BTNdosen.addActionListener(e -> this.controller.openDosen());
-        BTNmahasiswa1.addActionListener(e -> this.controller.openMahasiswa());
-        BTNmatkul1.addActionListener(e -> this.controller.openMatkul());
     }
 
     public void setMahasiswaCount(int count) {
