@@ -9,7 +9,8 @@ package Model;
  * @author Lenovo
  */
 public class MatkulSAMod {
- private String kodeMatkul;
+
+    private String kodeMatkul;
     private String namaMatkul;
 
     public MatkulSAMod(String kodeMatkul, String namaMatkul) {
@@ -17,9 +18,19 @@ public class MatkulSAMod {
         this.namaMatkul = namaMatkul;
     }
 
-    public String getKodeMatkul() { return kodeMatkul; }
-    public void setKodeMatkul(String kodeMatkul) { this.kodeMatkul = kodeMatkul; }
+    public String getKodeMatkul() {
+        return kodeMatkul;
+    }
 
-    public String getNamaMatkul() { return namaMatkul; }
-    public void setNamaMatkul(String namaMatkul) { this.namaMatkul = namaMatkul; }   
+    public void setKodeMatkul(String kodeMatkul) {
+        this.kodeMatkul = kodeMatkul;
+    }
+
+    public String getNamaMatkul() {
+        return namaMatkul;
+    }
+
+    public void setNamaMatkul(String namaMatkul) {
+        this.namaMatkul = namaMatkul;
+    }
 }
