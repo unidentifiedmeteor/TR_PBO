@@ -4,19 +4,52 @@
  */
 package View;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
 /**
  *
  * @author Lenovo
  */
 public class DashboardSA extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DashboardSA.class.getName());
+
+    private void loadCounts() {
+        // If your table names are different, change them here
+        int jumlahMahasiswa = getRowCount("mahasiswa");
+        int jumlahDosen = getRowCount("dosen");
+        int jumlahMatkul = getRowCount("matkul");
+
+        // label1, label3, label5 are java.awt.Label in your generated code
+        label1.setText(String.valueOf(jumlahMahasiswa));
+        label3.setText(String.valueOf(jumlahDosen));
+        label5.setText(String.valueOf(jumlahMatkul));
+    }
+
+    private int getRowCount(String tableName) {
+        int count = 0;
+        String sql = "SELECT COUNT(*) AS total FROM " + tableName;
+        try (Connection conn = Model.koneksi.getConnection(); Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+
+            if (rs.next()) {
+                count = rs.getInt("total");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            // optionally set a visible fallback
+            // e.g. label1.setText("ERR"); but avoid touching labels here (we update in loadCounts)
+        }
+        return count;
+    }
 
     /**
      * Creates new form DashboardSA
      */
     public DashboardSA() {
         initComponents();
+        loadCounts();
     }
 
     DashboardSA(String id) {
@@ -86,7 +119,7 @@ public class DashboardSA extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(BTNmahasiswa1, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
+                    .addComponent(BTNmahasiswa1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, Short.MAX_VALUE)
                     .addComponent(BTNhome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(BTNdosen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -117,7 +150,7 @@ public class DashboardSA extends javax.swing.JFrame {
 
         label1.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         label1.setForeground(new java.awt.Color(255, 255, 255));
-        label1.setText("6243");
+        label1.setText("100");
 
         label2.setForeground(new java.awt.Color(255, 255, 255));
         label2.setText("Mahasiswa");
@@ -127,13 +160,13 @@ public class DashboardSA extends javax.swing.JFrame {
         JMLmahasiswaLayout.setHorizontalGroup(
             JMLmahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(JMLmahasiswaLayout.createSequentialGroup()
-                .addGap(24, 24, 24)
+                .addGap(28, 28, 28)
                 .addGroup(JMLmahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(JMLmahasiswaLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
-                        .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(32, Short.MAX_VALUE))
+                        .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         JMLmahasiswaLayout.setVerticalGroup(
             JMLmahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -160,11 +193,11 @@ public class DashboardSA extends javax.swing.JFrame {
         JMLmahasiswa1Layout.setHorizontalGroup(
             JMLmahasiswa1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JMLmahasiswa1Layout.createSequentialGroup()
-                .addContainerGap(45, Short.MAX_VALUE)
-                .addGroup(JMLmahasiswa1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addContainerGap(39, Short.MAX_VALUE)
+                .addGroup(JMLmahasiswa1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(label4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(label3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(35, 35, 35))
+                .addGap(40, 40, 40))
         );
         JMLmahasiswa1Layout.setVerticalGroup(
             JMLmahasiswa1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -191,10 +224,10 @@ public class DashboardSA extends javax.swing.JFrame {
             JMLmahasiswa2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(JMLmahasiswa2Layout.createSequentialGroup()
                 .addGap(39, 39, 39)
-                .addGroup(JMLmahasiswa2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(JMLmahasiswa2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(label6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(label5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
         JMLmahasiswa2Layout.setVerticalGroup(
             JMLmahasiswa2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
