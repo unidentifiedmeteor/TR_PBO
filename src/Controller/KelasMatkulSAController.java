@@ -29,6 +29,7 @@ public class KelasMatkulSAController {
                 k.getKodeKelas(),
                 k.getNamaKelas(),
                 k.getKodeDosen(),
+                k.getHari(),
                 k.getJadwalMulai(),
                 k.getJadwalSelesai(),
                 "Peserta"

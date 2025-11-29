@@ -257,7 +257,8 @@ public class dosenSA extends javax.swing.JFrame {
     }//GEN-LAST:event_BTNmahasiswa1ActionPerformed
 
     private void BTNmatkul1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNmatkul1ActionPerformed
-
+        new matkulSA().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_BTNmatkul1ActionPerformed
 
     /**

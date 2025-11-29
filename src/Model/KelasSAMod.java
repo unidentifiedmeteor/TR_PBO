@@ -12,16 +12,18 @@ public class KelasSAMod {
 
     private String kodeKelas;
     private String namaKelas;
+    private String hari;
     private String jadwalMulai;
     private String jadwalSelesai;
     private String kodeDosen;
     private String kodeMatkul;
 
-    public KelasSAMod(String kodeKelas, String namaKelas,
+    public KelasSAMod(String kodeKelas, String namaKelas, String hari,
             String jadwalMulai, String jadwalSelesai,
             String kodeDosen, String kodeMatkul) {
         this.kodeKelas = kodeKelas;
         this.namaKelas = namaKelas;
+        this.hari = hari;
         this.jadwalMulai = jadwalMulai;
         this.jadwalSelesai = jadwalSelesai;
         this.kodeDosen = kodeDosen;
@@ -34,6 +36,14 @@ public class KelasSAMod {
 
     public String getNamaKelas() {
         return namaKelas;
+    }
+
+    public String getHari() {
+        return hari;
+    }
+
+    public void setHari(String hari) {
+        this.hari = hari;
     }
 
     public String getJadwalMulai() {

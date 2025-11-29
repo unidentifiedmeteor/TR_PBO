@@ -23,7 +23,7 @@ public class KelasDAO {
     public List<KelasSAMod> getKelasMatkul(String kodeMatkul) {
         List<KelasSAMod> list = new ArrayList<>();
 
-        String sql = "SELECT kode_kelas, nama_kelas, jadwal_mulai, jadwal_selesai, " +
+        String sql = "SELECT kode_kelas, nama_kelas, hari, jadwal_mulai, jadwal_selesai, " +
                      "       kode_dosen, kode_matkul " +
                      "FROM kelas " +
                      "WHERE kode_matkul = ?";
@@ -35,6 +35,7 @@ public class KelasDAO {
                     list.add(new KelasSAMod(
                         rs.getString("kode_kelas"),
                         rs.getString("nama_kelas"),
+                        rs.getString("hari"),
                         rs.getString("jadwal_mulai"),
                         rs.getString("jadwal_selesai"),
                         rs.getString("kode_dosen"),

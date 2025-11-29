@@ -35,10 +35,10 @@ public class kelasMatkulSA extends javax.swing.JFrame {
     }
 
     private void loadTableKelas() {
-        DefaultTableModel model = new DefaultTableModel(new Object[]{"Kode Kelas", "Nama Kelas", "Kode Dosen","Mulai", "Selesai", "Peserta" }, 0) {
+        DefaultTableModel model = new DefaultTableModel(new Object[]{"Kode Kelas", "Nama Kelas", "Kode Dosen", "Hari", "Mulai", "Selesai", "Peserta" }, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 5;
+                return column == 6;
             }
         };
 
@@ -53,6 +53,7 @@ public class kelasMatkulSA extends javax.swing.JFrame {
         jTable1.getColumnModel().getColumn(3).setPreferredWidth(80);
         jTable1.getColumnModel().getColumn(4).setPreferredWidth(80);
         jTable1.getColumnModel().getColumn(5).setPreferredWidth(80);
+        jTable1.getColumnModel().getColumn(6).setPreferredWidth(80);
 
         controller.loadKelasMatkul(model, kodeMatkul);
     }
