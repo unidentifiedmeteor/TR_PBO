@@ -40,4 +40,19 @@ public class DosenDAO {
         return list;
     }
 
+    public String getNamaDosen(String kodeDosen) {
+        String sql = "SELECT nama_dosen FROM dosen WHERE kode_dosen = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, kodeDosen);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("nama_dosen");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

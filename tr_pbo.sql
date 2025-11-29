@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 28, 2025 at 12:56 PM
+-- Generation Time: Nov 29, 2025 at 04:57 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -66,6 +66,7 @@ INSERT INTO `dosen_matkul` (`kode_dosen`, `kode_matkul`) VALUES
 
 CREATE TABLE `kelas` (
   `kode_kelas` char(10) NOT NULL,
+  `nama_kelas` varchar(100) NOT NULL,
   `jadwal_mulai` time NOT NULL,
   `jadwal_selesai` time NOT NULL,
   `kode_dosen` char(10) NOT NULL,
@@ -76,8 +77,8 @@ CREATE TABLE `kelas` (
 -- Dumping data for table `kelas`
 --
 
-INSERT INTO `kelas` (`kode_kelas`, `jadwal_mulai`, `jadwal_selesai`, `kode_dosen`, `kode_matkul`) VALUES
-('TC212A', '12:00:00', '15:00:00', 'D001', 'TC212');
+INSERT INTO `kelas` (`kode_kelas`, `nama_kelas`, `jadwal_mulai`, `jadwal_selesai`, `kode_dosen`, `kode_matkul`) VALUES
+('TC212A', 'Pemrograman Berorientasi Objek A', '12:00:00', '15:00:00', 'D001', 'TC212');
 
 -- --------------------------------------------------------
 
@@ -135,7 +136,8 @@ CREATE TABLE `matkul` (
 --
 
 INSERT INTO `matkul` (`kode_matkul`, `nama_matkul`) VALUES
-('TC212', 'Pemrograman Berbasis Objek');
+('TC212', 'Pemrograman Berbasis Objek'),
+('TC223', 'Pemrograman Web');
 
 -- --------------------------------------------------------
 

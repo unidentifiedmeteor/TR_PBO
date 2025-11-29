@@ -7,7 +7,6 @@ package View;
 import Controller.DashboardSAController;
 import Model.DashboardSAMod;
 
-
 /**
  *
  * @author Lenovo
@@ -37,12 +36,15 @@ public class DashboardSA extends javax.swing.JFrame {
         javax.swing.JOptionPane.showMessageDialog(this, message, "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
     }
 
-
     /**
      * Creates new form DashboardSA
      */
     public DashboardSA() {
         initComponents();
+        DashboardSAMod model = new DashboardSAMod();
+        DashboardSAController controller = new DashboardSAController(model, this);
+        setController(controller);
+        controller.loadCounts();
     }
 
     DashboardSA(String id) {
@@ -304,13 +306,13 @@ public class DashboardSA extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-        DashboardSA view = new DashboardSA();
-        DashboardSAMod model = new DashboardSAMod();
-        DashboardSAController controller = new DashboardSAController(model, view);
-        view.setController(controller);
-        view.setVisible(true);
-        controller.loadCounts(); // start loading
-    });
+            DashboardSA view = new DashboardSA();
+            DashboardSAMod model = new DashboardSAMod();
+            DashboardSAController controller = new DashboardSAController(model, view);
+            view.setController(controller);
+            view.setVisible(true);
+            controller.loadCounts(); // start loading
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -9,47 +9,52 @@ import javax.swing.*;
 import javax.swing.table.*;
 import Model.koneksi;
 import java.sql.Connection;
-import Model.MatkulDAO;
-import Controller.MatkulSAController;
+import Model.KelasDAO;
+import Controller.KelasMatkulSAController;
 
 /**
  *
  * @author Lenovo
  */
-public class matkulSA extends javax.swing.JFrame {
+public class kelasMatkulSA extends javax.swing.JFrame {
 
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(matkulSA.class.getName());
-    private final MatkulSAController controller;
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(kelasMatkulSA.class.getName());
+    private final KelasMatkulSAController controller;
+    private final String kodeMatkul;
+
     /**
      * Creates new form mahasiswaSA
      */
-    public matkulSA() {
+    public kelasMatkulSA(String kodeMatkul) {
         initComponents();
+        this.kodeMatkul = kodeMatkul;
         Connection conn = koneksi.getConnection();
-        this.controller = new MatkulSAController(new MatkulDAO(conn));
-        loadTableMatkul();
+        this.controller = new KelasMatkulSAController(new KelasDAO(conn));
+        labKodeMatkul.setText("Matkul: " + kodeMatkul);
+        loadTableKelas();
     }
 
-    private void loadTableMatkul() {
-        //Di model ini semua cellnya gabisa diedit kecuali kolom yang ada buttonnya
-        DefaultTableModel model = new DefaultTableModel(new Object[]{"Kode Matkul", "Nama Matkul", "Kelas"}, 0) {
+    private void loadTableKelas() {
+        DefaultTableModel model = new DefaultTableModel(new Object[]{"Kode Kelas", "Nama Kelas", "Kode Dosen","Mulai", "Selesai", "Peserta" }, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                //Ini yang indexnya 2 adalah kolom Kelas, editable biar button bisa di klik
-                return column == 2;
+                return column == 5;
             }
         };
 
         jTable1.setModel(model);
 
-        jTable1.getColumn("Kelas").setCellRenderer(new ButtonRenderer());
-        jTable1.getColumn("Kelas").setCellEditor(new ButtonEditor(new JCheckBox())); // editor uses a checkbox constructor pattern
+        jTable1.getColumn("Peserta").setCellRenderer(new ButtonRenderer());
+        jTable1.getColumn("Peserta").setCellEditor(new ButtonEditor(new JCheckBox())); // editor uses a checkbox constructor pattern
 
-        jTable1.getColumnModel().getColumn(0).setPreferredWidth(100);
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(80);
         jTable1.getColumnModel().getColumn(1).setPreferredWidth(250);
-        jTable1.getColumnModel().getColumn(2).setPreferredWidth(80);
+        jTable1.getColumnModel().getColumn(2).setPreferredWidth(100);
+        jTable1.getColumnModel().getColumn(3).setPreferredWidth(80);
+        jTable1.getColumnModel().getColumn(4).setPreferredWidth(80);
+        jTable1.getColumnModel().getColumn(5).setPreferredWidth(80);
 
-        controller.loadMatkul(model);
+        controller.loadKelasMatkul(model, kodeMatkul);
     }
 
     private static class ButtonRenderer extends JButton implements TableCellRenderer {
@@ -82,10 +87,9 @@ public class matkulSA extends javax.swing.JFrame {
                 try {
                     // convert view row -> model row just (buat kalau misal tablenya ada sorter)
                     int modelRow = jTable1.convertRowIndexToModel(row);
-                    String kodeMatkul = jTable1.getModel().getValueAt(modelRow, 0).toString(); // kolom 0 = NIM
-                    //buka Kelas sebelum stop editting
-                    new kelasMatkulSA(kodeMatkul).setVisible(true);
-                    matkulSA.this.dispose();
+                    String kodeMatkul = jTable1.getModel().getValueAt(modelRow, 0).toString();
+                    bukaKelasMatkul(kodeMatkul);
+
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 } finally {
@@ -109,6 +113,11 @@ public class matkulSA extends javax.swing.JFrame {
         }
     }
 
+    private void bukaKelasMatkul(String kodeMatkul) {
+//        controller.bukaKelas(nim);
+//        this.dispose();
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -125,6 +134,7 @@ public class matkulSA extends javax.swing.JFrame {
         BTNmatkul1 = new java.awt.Button();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        labKodeMatkul = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -205,20 +215,32 @@ public class matkulSA extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
+        labKodeMatkul.setText("jLabel1");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(262, 262, 262)
+                        .addComponent(labKodeMatkul))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 572, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(labKodeMatkul)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addGap(3, 3, 3))
         );
 
         pack();
@@ -240,33 +262,34 @@ public class matkulSA extends javax.swing.JFrame {
     }//GEN-LAST:event_BTNmahasiswa1ActionPerformed
 
     private void BTNmatkul1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNmatkul1ActionPerformed
-
+        new matkulSA().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_BTNmatkul1ActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new matkulSA().setVisible(true));
-    }
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+//            logger.log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(() -> new kelasMatkulSA().setVisible(true));
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Button BTNdosen;
@@ -276,5 +299,6 @@ public class matkulSA extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JLabel labKodeMatkul;
     // End of variables declaration//GEN-END:variables
 }
