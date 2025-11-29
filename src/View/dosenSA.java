@@ -94,6 +94,7 @@ public class dosenSA extends javax.swing.JFrame {
                         String kodeDosen = jTable1.getModel().getValueAt(modelRow, 0).toString(); // kolom 0
                         new matkulDosenSA(kodeDosen).setVisible(true);
                         bukaMatkul(kodeDosen);
+                        dosenSA.this.dispose();
                     } else if (col == 3) {
                         //
                     }
