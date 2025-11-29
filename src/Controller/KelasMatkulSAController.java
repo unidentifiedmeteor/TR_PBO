@@ -6,6 +6,7 @@ package Controller;
 
 import Model.KelasDAO;
 import Model.KelasSAMod;
+import Model.MahasiswaSAMod;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
@@ -14,6 +15,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Lenovo
  */
 public class KelasMatkulSAController {
+
     private final KelasDAO dao;
 
     public KelasMatkulSAController(KelasDAO dao) {
@@ -36,4 +38,22 @@ public class KelasMatkulSAController {
             });
         }
     }
+
+    public void loadPesertaKelas(DefaultTableModel model, String kodeKelas) {
+        model.setRowCount(0);
+        List<MahasiswaSAMod> list = dao.getPesertaKelas(kodeKelas);
+
+        for (MahasiswaSAMod m : list) {
+            model.addRow(new Object[]{
+                m.getNim(),
+                m.getNama(),
+                "Hapus"
+            });
+        }
+    }
+
+    public void hapusPeserta(String kodeKelas, String nim) {
+        dao.hapusPesertaKelas(kodeKelas, nim);
+    }
+
 }

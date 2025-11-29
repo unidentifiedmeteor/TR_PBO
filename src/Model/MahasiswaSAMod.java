@@ -20,7 +20,33 @@ public class MahasiswaSAMod {
         this.nama = nama;
         this.ipk = ipk;
     }
-    public String getNim() { return nim; }
-    public String getNama() { return nama; }
-    public Double getIpk() { return ipk; }
+
+    public MahasiswaSAMod() {
+        
+    }
+
+    public String getNim() {
+        return nim;
+    }
+
+    public void setNim(String nim) {
+        this.nim = nim;
+    }
+
+    public String getNama() {
+        return nama;
+    }
+
+    public void setNama(String nama) {
+        this.nama = nama;
+    }
+
+    public Double getIpk() {
+        return ipk;
+    }
+
+    public void setIpk(Double ipk) {
+        this.ipk = ipk;
+    }
+
 }

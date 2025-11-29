@@ -4,58 +4,55 @@
  */
 package View;
 
+import Controller.KelasMatkulSAController;
 import java.awt.Component;
 import javax.swing.*;
 import javax.swing.table.*;
 import Model.koneksi;
 import java.sql.Connection;
+import Model.MatkulDAO;
+import Controller.MatkulDosenSAController;
 import Model.KelasDAO;
-import Controller.KelasMatkulSAController;
 
 /**
  *
  * @author Lenovo
  */
-public class kelasMatkulSA extends javax.swing.JFrame {
+public class pesertaKelasSA extends javax.swing.JFrame {
 
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(kelasMatkulSA.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(pesertaKelasSA.class.getName());
     private final KelasMatkulSAController controller;
-    private final String kodeMatkul;
+    private final String kodeKelas;
 
     /**
      * Creates new form mahasiswaSA
      */
-    public kelasMatkulSA(String kodeMatkul) {
+    public pesertaKelasSA(String kodeKelas) {
         initComponents();
-        this.kodeMatkul = kodeMatkul;
+        this.kodeKelas = kodeKelas;
         Connection conn = koneksi.getConnection();
         this.controller = new KelasMatkulSAController(new KelasDAO(conn));
-        labKodeMatkul.setText("Matkul: " + kodeMatkul);
-        loadTableKelas();
+        loadTablePesertaKelas();
+        kodeDosenMatkul.setText("Kelas: " + kodeKelas);
     }
 
-    private void loadTableKelas() {
-        DefaultTableModel model = new DefaultTableModel(new Object[]{"Kode Kelas", "Nama Kelas", "Kode Dosen", "Hari", "Mulai", "Selesai", "Peserta"}, 0) {
+    private void loadTablePesertaKelas() {
+        DefaultTableModel model = new DefaultTableModel(new Object[]{"NIM", "Nama", "Hapus"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 6;
+                return column == 2;
             }
         };
 
         jTable1.setModel(model);
 
-        jTable1.getColumn("Peserta").setCellRenderer(new ButtonRenderer());
-        jTable1.getColumn("Peserta").setCellEditor(new ButtonEditor(new JCheckBox())); // editor uses a checkbox constructor pattern
+        jTable1.getColumn("Hapus").setCellRenderer(new pesertaKelasSA.ButtonRenderer());
+        jTable1.getColumn("Hapus").setCellEditor(new pesertaKelasSA.ButtonEditor(new JCheckBox())); // editor uses a checkbox constructor pattern
 
-        jTable1.getColumnModel().getColumn(0).setPreferredWidth(80);
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(100);
         jTable1.getColumnModel().getColumn(1).setPreferredWidth(250);
-        jTable1.getColumnModel().getColumn(2).setPreferredWidth(100);
-        jTable1.getColumnModel().getColumn(3).setPreferredWidth(80);
-        jTable1.getColumnModel().getColumn(4).setPreferredWidth(80);
-        jTable1.getColumnModel().getColumn(5).setPreferredWidth(80);
-        jTable1.getColumnModel().getColumn(6).setPreferredWidth(80);
 
-        controller.loadKelasMatkul(model, kodeMatkul);
+        controller.loadPesertaKelas(model, kodeKelas);
     }
 
     private static class ButtonRenderer extends JButton implements TableCellRenderer {
@@ -88,9 +85,9 @@ public class kelasMatkulSA extends javax.swing.JFrame {
                 try {
                     // convert view row -> model row just (buat kalau misal tablenya ada sorter)
                     int modelRow = jTable1.convertRowIndexToModel(row);
-                    String kodeKelas = jTable1.getModel().getValueAt(modelRow, 0).toString();
-                    bukaPesertaKelas(kodeKelas);
-
+                    String nim = jTable1.getModel().getValueAt(modelRow, 0).toString(); // kolom 0 = NIM
+                    //buka Kelas sebelum stop editting
+                    hapusPeserta(nim);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 } finally {
@@ -114,9 +111,18 @@ public class kelasMatkulSA extends javax.swing.JFrame {
         }
     }
 
-    private void bukaPesertaKelas(String kodeKelas) {
-        new pesertaKelasSA(kodeKelas).setVisible(true);
-        this.dispose();
+    private void hapusPeserta(String nim) {
+        int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "Hapus mahasiswa " + nim + " dari kelas ini?",
+                "Konfirmasi",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            controller.hapusPeserta(kodeKelas, nim);
+            loadTablePesertaKelas(); // refresh table
+        }
     }
 
     /**
@@ -135,7 +141,7 @@ public class kelasMatkulSA extends javax.swing.JFrame {
         BTNmatkul1 = new java.awt.Button();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        labKodeMatkul = new javax.swing.JLabel();
+        kodeDosenMatkul = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -216,7 +222,7 @@ public class kelasMatkulSA extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        labKodeMatkul.setText("jLabel1");
+        kodeDosenMatkul.setText("Kode Dosen");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -226,22 +232,23 @@ public class kelasMatkulSA extends javax.swing.JFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(262, 262, 262)
-                        .addComponent(labKodeMatkul))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 572, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(14, Short.MAX_VALUE))
+                        .addGap(205, 205, 205)
+                        .addComponent(kodeDosenMatkul)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(labKodeMatkul)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(kodeDosenMatkul)
+                .addGap(10, 10, 10)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addGap(3, 3, 3))
+                .addContainerGap())
         );
 
         pack();
@@ -287,9 +294,10 @@ public class kelasMatkulSA extends javax.swing.JFrame {
 //            logger.log(java.util.logging.Level.SEVERE, null, ex);
 //        }
 //        //</editor-fold>
+//        String kodeDosen = null;
 //
 //        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(() -> new kelasMatkulSA().setVisible(true));
+//        java.awt.EventQueue.invokeLater(() -> new matkulDosenSA(kodeDosen).setVisible(true));
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -300,6 +308,6 @@ public class kelasMatkulSA extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JLabel labKodeMatkul;
+    private javax.swing.JLabel kodeDosenMatkul;
     // End of variables declaration//GEN-END:variables
 }
