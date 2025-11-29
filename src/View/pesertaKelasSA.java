@@ -10,8 +10,6 @@ import javax.swing.*;
 import javax.swing.table.*;
 import Model.koneksi;
 import java.sql.Connection;
-import Model.MatkulDAO;
-import Controller.MatkulDosenSAController;
 import Model.KelasDAO;
 
 /**
@@ -121,7 +119,7 @@ public class pesertaKelasSA extends javax.swing.JFrame {
 
         if (confirm == JOptionPane.YES_OPTION) {
             controller.hapusPeserta(kodeKelas, nim);
-            loadTablePesertaKelas(); // refresh table
+            loadTablePesertaKelas(); // refresh
         }
     }
 

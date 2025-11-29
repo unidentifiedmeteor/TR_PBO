@@ -17,15 +17,18 @@ public class KelasSAMod {
     private String jadwalSelesai;
     private String kodeDosen;
     private String kodeMatkul;
+    private String ruangan;
 
     public KelasSAMod(String kodeKelas, String namaKelas, String hari,
             String jadwalMulai, String jadwalSelesai,
+            String ruangan,
             String kodeDosen, String kodeMatkul) {
         this.kodeKelas = kodeKelas;
         this.namaKelas = namaKelas;
         this.hari = hari;
         this.jadwalMulai = jadwalMulai;
         this.jadwalSelesai = jadwalSelesai;
+        this.ruangan = ruangan;
         this.kodeDosen = kodeDosen;
         this.kodeMatkul = kodeMatkul;
     }
@@ -80,6 +83,14 @@ public class KelasSAMod {
 
     public void setKodeDosen(String kodeDosen) {
         this.kodeDosen = kodeDosen;
+    }
+
+    public String getRuangan() {
+        return ruangan;
+    }
+
+    public void setRuangan(String ruangan) {
+        this.ruangan = ruangan;
     }
 
     public void setKodeMatkul(String kodeMatkul) {

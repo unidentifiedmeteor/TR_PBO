@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Controller;
+
 import Model.DosenDAO;
 import Model.MatkulDAO;
 import Model.MatkulSAMod;
@@ -14,13 +15,13 @@ import javax.swing.table.DefaultTableModel;
  * @author Lenovo
  */
 public class MatkulDosenSAController {
+
     private MatkulDAO matkulDao;
     private DosenDAO dosenDao;
 
     public MatkulDosenSAController(MatkulDAO dao) {
         this.matkulDao = dao;
     }
-
 
     public void loadMatkulDosen(DefaultTableModel model, String kodeDosen) {
         model.setRowCount(0);
@@ -33,8 +34,10 @@ public class MatkulDosenSAController {
                 m.getNamaMatkul()
             });
         }
+        System.out.println("DEBUG kodeDosen = " + kodeDosen);
+        System.out.println("DEBUG list size = " + list.size());
     }
-    
+
     public String getNamaDosen(String kodeDosen) {
         return dosenDao.getNamaDosen(kodeDosen);
     }

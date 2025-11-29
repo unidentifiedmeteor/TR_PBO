@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 29, 2025 at 06:52 AM
+-- Generation Time: Nov 29, 2025 at 12:07 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -71,16 +71,17 @@ CREATE TABLE `kelas` (
   `jadwal_mulai` time NOT NULL,
   `jadwal_selesai` time NOT NULL,
   `kode_dosen` char(10) NOT NULL,
-  `kode_matkul` char(10) NOT NULL
+  `kode_matkul` char(10) NOT NULL,
+  `ruangan` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `kelas`
 --
 
-INSERT INTO `kelas` (`kode_kelas`, `nama_kelas`, `hari`, `jadwal_mulai`, `jadwal_selesai`, `kode_dosen`, `kode_matkul`) VALUES
-('TC212A', 'Pemrograman Berorientasi Objek A', 'Senin', '12:00:00', '15:00:00', 'D001', 'TC212'),
-('TC212B', 'Pemrograman Berorientasi Objek B', 'Senin', '07:00:00', '10:00:00', 'D001', 'TC212');
+INSERT INTO `kelas` (`kode_kelas`, `nama_kelas`, `hari`, `jadwal_mulai`, `jadwal_selesai`, `kode_dosen`, `kode_matkul`, `ruangan`) VALUES
+('TC212A', 'Pemrograman Berorientasi Objek A', 'Senin', '12:00:00', '15:00:00', 'D001', 'TC212', 'FTI455'),
+('TC212B', 'Pemrograman Berorientasi Objek B', 'Senin', '07:00:00', '10:00:00', 'D001', 'TC212', 'FTI455');
 
 -- --------------------------------------------------------
 
@@ -120,7 +121,6 @@ CREATE TABLE `mahasiswa_kelas` (
 --
 
 INSERT INTO `mahasiswa_kelas` (`NIM`, `kode_kelas`) VALUES
-('672024000', 'TC212A'),
 ('672024001', 'TC212A');
 
 -- --------------------------------------------------------
