@@ -46,7 +46,8 @@ public class KelasMatkulSAController {
                 k.getJadwalSelesai(),
                 k.getRuangan(),
                 "Peserta",
-                "Hapus"
+                "Hapus",
+                "Absensi"
             });
         }
     }
@@ -91,6 +92,29 @@ public class KelasMatkulSAController {
         if (sebelum == 0) {
             MatkulDosenDao.TambahRelasiDM(kodeDosen, kodeMatkul);
         }
+    }
+
+    public void updateKelas(String kodeMatkul,
+            String kodeKelasLama,
+            String kodeKelasBaru,
+            String namaKelas,
+            String kodeDosen,
+            String hari,
+            String mulai,
+            String selesai,
+            String ruangan) {
+
+        dao.updateKelas(
+                kodeMatkul,
+                kodeKelasLama,
+                kodeKelasBaru,
+                namaKelas,
+                kodeDosen,
+                hari,
+                mulai,
+                selesai,
+                ruangan
+        );
     }
 
     public boolean isKodeKelasExist(String kodeKelas) {

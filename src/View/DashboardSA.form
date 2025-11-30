@@ -32,7 +32,7 @@
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="JMLmahasiswa1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="121" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="117" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -66,9 +66,10 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="BTNmahasiswa1" pref="75" max="32767" attributes="0"/>
+                      <Component id="BTNmahasiswa1" pref="79" max="32767" attributes="0"/>
                       <Component id="BTNhome" alignment="0" max="32767" attributes="0"/>
                       <Component id="BTNdosen" alignment="0" max="32767" attributes="0"/>
+                      <Component id="BTNlogout" alignment="1" pref="79" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -86,11 +87,13 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="BTNhome" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="71" max="32767" attributes="0"/>
                   <Component id="BTNdosen" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                   <Component id="BTNmahasiswa1" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="121" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="BTNlogout" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="87" max="-2" attributes="0"/>
               </Group>
               <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
@@ -133,6 +136,14 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BTNmatkul1ActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="java.awt.Button" name="BTNlogout">
+          <Properties>
+            <Property name="label" type="java.lang.String" value="Logout"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BTNlogoutActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

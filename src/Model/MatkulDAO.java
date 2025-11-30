@@ -3,9 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Model;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  *
  * @author Lenovo
@@ -37,23 +39,23 @@ public class MatkulDAO {
 
         return list;
     }
-    
-     public List<MatkulSAMod> getMatkulnyaDosen(String kodeDosen) {
+
+    public List<MatkulSAMod> getMatkulnyaDosen(String kodeDosen) {
         List<MatkulSAMod> list = new ArrayList<>();
 
-        String sql =
-            "SELECT m.kode_matkul, m.nama_matkul " +
-            "FROM matkul m " +
-            "JOIN dosen_matkul dm ON m.kode_matkul = dm.kode_matkul " +
-            "WHERE dm.kode_dosen = ?";
+        String sql
+                = "SELECT m.kode_matkul, m.nama_matkul "
+                + "FROM matkul m "
+                + "JOIN dosen_matkul dm ON m.kode_matkul = dm.kode_matkul "
+                + "WHERE dm.kode_dosen = ?";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, kodeDosen);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     list.add(new MatkulSAMod(
-                        rs.getString("kode_matkul"),
-                        rs.getString("nama_matkul")
+                            rs.getString("kode_matkul"),
+                            rs.getString("nama_matkul")
                     ));
                 }
             }
@@ -63,5 +65,23 @@ public class MatkulDAO {
 
         return list;
     }
-     
+
+    public List<String> getStringMatkul() {
+        List<String> list = new ArrayList<>();
+        String sql = "SELECT kode_matkul, nama_matkul FROM matkul ORDER BY kode_matkul";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                String kode = rs.getString("kode_matkul");
+                String nama = rs.getString("nama_matkul");
+                list.add(kode + " - " + nama);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
 }

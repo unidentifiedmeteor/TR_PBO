@@ -72,12 +72,12 @@ public class MatkulDosenDAO {
         }
     }
 
-    
     public void TambahRelasiDM(String kodeDosen, String kodeMatkul) {
         if (!isRelasiExist(kodeDosen, kodeMatkul)) {
             tambahRelasiDosenMatkul(kodeDosen, kodeMatkul);
         }
     }
+
     public void hapusRelasiDosenMatkul(String kodeDosen, String kodeMatkul) {
         String sql = "DELETE FROM dosen_matkul WHERE kode_dosen = ? AND kode_matkul = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -89,10 +89,15 @@ public class MatkulDosenDAO {
         }
     }
 
-    
     public void HapusRelasiDM(String kodeDosen, String kodeMatkul) {
         if (isRelasiExist(kodeDosen, kodeMatkul)) {
             hapusRelasiDosenMatkul(kodeDosen, kodeMatkul);
+        }
+    }
+
+    public void tambahRelasiJikaBelumAda(String kodeDosen, String kodeMatkul) {
+        if (!isRelasiExist(kodeDosen, kodeMatkul)) {
+            TambahRelasiDM(kodeDosen, kodeMatkul);
         }
     }
 
