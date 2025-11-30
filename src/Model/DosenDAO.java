@@ -72,5 +72,50 @@ public class DosenDAO {
         }
         return list;
     }
+    
+    public List<KelasModel> getKelasDiampu(String kodeDosen) {
+    // List sekarang menampung object KelasModel
+    List<KelasModel> kelasList = new ArrayList<>(); 
+    
+    // SQL disederhanakan: langsung ambil dari tabel 'kelas' karena sudah ada 'kode_dosen'
+    String sql = "SELECT kode_kelas, nama_kelas " +
+                 "FROM kelas " +
+                 "WHERE kode_dosen = ?"; // Filter berdasarkan dosen yang login
+    
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, kodeDosen);
+        
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                kelasList.add(new KelasModel( // KelasModel sudah dibuat/diimpor
+                    rs.getString("kode_kelas"), // Nama kolom di DB adalah kode_kelas
+                    rs.getString("nama_kelas")  // Nama kolom di DB adalah nama_kelas
+                ));
+            }
+        }
+    } catch (SQLException e) {
+        System.err.println("Error saat mengambil kelas yang diampu: " + e.getMessage());
+        e.printStackTrace();
+    }
+    return kelasList;
+}
+
+// Tambahkan metode Login yang sudah kita bahas sebelumnya
+public boolean login(String kodeDosen, String password) {
+    String sql = "SELECT COUNT(*) FROM dosen WHERE kode_dosen = ? AND password = ?";
+    // ... (implementasi login seperti yang sudah dibahas) ...
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, kodeDosen);
+        ps.setString(2, password);
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1) > 0; 
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return false;
+}
 
 }
