@@ -176,6 +176,47 @@ public class KelasDAO {
         }
     }
 
+    public void updateKelas(String kodeMatkul,
+            String kodeKelasLama,
+            String kodeKelasBaru,
+            String namaKelas,
+            String kodeDosen,
+            String hari,
+            String mulai,
+            String selesai,
+            String ruangan) {
+
+        String sql = "UPDATE kelas SET "
+                + "kode_kelas = ?, "
+                + "nama_kelas = ?, "
+                + "kode_dosen = ?, "
+                + "hari = ?, "
+                + "jadwal_mulai = ?, "
+                + "jadwal_selesai = ?, "
+                + "ruangan = ? "
+                + "WHERE kode_matkul = ? AND kode_kelas = ?";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, kodeKelasBaru);
+            ps.setString(2, namaKelas);
+            ps.setString(3, kodeDosen);
+            ps.setString(4, hari);
+            ps.setString(5, mulai);
+            ps.setString(6, selesai);
+            ps.setString(7, ruangan);
+            ps.setString(8, kodeMatkul);
+            ps.setString(9, kodeKelasLama);
+
+            int updated = ps.executeUpdate();
+            if (updated == 0) {
+                throw new RuntimeException("Kelas tidak ditemukan, tidak ada data yang terupdate.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Gagal mengupdate kelas", e);
+        }
+    }
+
     public boolean isKodeKelasExist(String kodeKelas) {
         String sql = "SELECT COUNT(*) FROM kelas WHERE kode_kelas = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {

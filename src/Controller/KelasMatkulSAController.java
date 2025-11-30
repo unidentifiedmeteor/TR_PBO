@@ -93,6 +93,29 @@ public class KelasMatkulSAController {
         }
     }
 
+    public void updateKelas(String kodeMatkul,
+            String kodeKelasLama,
+            String kodeKelasBaru,
+            String namaKelas,
+            String kodeDosen,
+            String hari,
+            String mulai,
+            String selesai,
+            String ruangan) {
+
+        dao.updateKelas(
+                kodeMatkul,
+                kodeKelasLama,
+                kodeKelasBaru,
+                namaKelas,
+                kodeDosen,
+                hari,
+                mulai,
+                selesai,
+                ruangan
+        );
+    }
+
     public boolean isKodeKelasExist(String kodeKelas) {
         return dao.isKodeKelasExist(kodeKelas);
     }
