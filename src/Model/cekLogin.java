@@ -35,7 +35,7 @@ public class cekLogin {
 
         String sql =
             "SELECT role, id FROM (" +
-            "  SELECT 'ADMIN' AS role, Admin_ID AS id, username AS uname, password AS pwd, 1 AS priority FROM Super_Admin " +
+            "  SELECT 'ADMIN' AS role, Admin_ID AS id, Admin_ID AS uname, password AS pwd, 1 AS priority FROM Super_Admin " +
             "  UNION ALL " +
             "  SELECT 'DOSEN', kode_dosen, kode_dosen, password, 2 FROM Dosen " +
             "  UNION ALL " +

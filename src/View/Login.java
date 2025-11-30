@@ -4,6 +4,7 @@
  */
 package View;
 
+import Model.Session;
 import Model.cekLogin;
 import javax.swing.JOptionPane;
 
@@ -38,6 +39,7 @@ public class Login extends javax.swing.JFrame {
         Loginusername = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         btnLogin = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -45,14 +47,12 @@ public class Login extends javax.swing.JFrame {
 
         jLabel2.setText("Username");
 
-        Loginpassword.setText("jPasswordField1");
         Loginpassword.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 LoginpasswordActionPerformed(evt);
             }
         });
 
-        Loginusername.setText("NIM/Kode Dosen/Admin Username");
         Loginusername.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 LoginusernameActionPerformed(evt);
@@ -68,14 +68,12 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
+        jLabel4.setText("Username = NIM/Kode Dosen/Admin ID");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(184, 184, 184)
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
@@ -95,6 +93,15 @@ public class Login extends javax.swing.JFrame {
                                     .addComponent(jLabel3)
                                     .addGap(108, 108, 108))))))
                 .addGap(111, 111, 111))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(184, 184, 184)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel4)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -111,7 +118,9 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(Loginpassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnLogin)
-                .addContainerGap(75, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel4)
+                .addContainerGap(41, Short.MAX_VALUE))
         );
 
         pack();
@@ -129,13 +138,11 @@ public class Login extends javax.swing.JFrame {
     String username = Loginusername.getText();
     String password = new String (Loginpassword.getPassword()).trim();
 
-    // quick validation
     if (username == null || username.trim().isEmpty() || password == null || password.isEmpty()) {
         JOptionPane.showMessageDialog(this, "Username dan password ga boleh kosong.", "WOY", JOptionPane.WARNING_MESSAGE);
         return;
     }
 
-    // call model
     cekLogin loginModel = new cekLogin();
     cekLogin.AuthResult result = loginModel.authenticate(username, password);
 
@@ -144,7 +151,8 @@ public class Login extends javax.swing.JFrame {
         return;
     }
 
-    // success — open appropriate dashboard
+    Session.setUser(result.getId(), result.getRole());
+    
     switch (result.getRole()) {
         case ADMIN:
             new DashboardSA(result.getId()).setVisible(true);
@@ -195,6 +203,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JOptionPane jOptionPane1;
     // End of variables declaration//GEN-END:variables
 }
