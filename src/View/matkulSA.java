@@ -4,19 +4,109 @@
  */
 package View;
 
+import java.awt.Component;
+import javax.swing.*;
+import javax.swing.table.*;
+import Model.koneksi;
+import java.sql.Connection;
+import Model.MatkulDAO;
+import Controller.MatkulSAController;
+
 /**
  *
  * @author Lenovo
  */
 public class matkulSA extends javax.swing.JFrame {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(matkulSA.class.getName());
 
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(matkulSA.class.getName());
+    private final MatkulSAController controller;
     /**
-     * Creates new form matkulSA
+     * Creates new form mahasiswaSA
      */
     public matkulSA() {
         initComponents();
+        Connection conn = koneksi.getConnection();
+        this.controller = new MatkulSAController(new MatkulDAO(conn));
+        loadTableMatkul();
+    }
+
+    private void loadTableMatkul() {
+        //Di model ini semua cellnya gabisa diedit kecuali kolom yang ada buttonnya
+        DefaultTableModel model = new DefaultTableModel(new Object[]{"Kode Matkul", "Nama Matkul", "Kelas"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                //Ini yang indexnya 2 adalah kolom Kelas, editable biar button bisa di klik
+                return column == 2;
+            }
+        };
+
+        jTable1.setModel(model);
+
+        jTable1.getColumn("Kelas").setCellRenderer(new ButtonRenderer());
+        jTable1.getColumn("Kelas").setCellEditor(new ButtonEditor(new JCheckBox())); // editor uses a checkbox constructor pattern
+
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(100);
+        jTable1.getColumnModel().getColumn(1).setPreferredWidth(250);
+        jTable1.getColumnModel().getColumn(2).setPreferredWidth(80);
+
+        controller.loadMatkul(model);
+    }
+
+    private static class ButtonRenderer extends JButton implements TableCellRenderer {
+
+        public ButtonRenderer() {
+            setOpaque(true);
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus,
+                int row, int column) {
+            setText(value == null ? "" : value.toString());
+            return this;
+        }
+    }
+
+    private class ButtonEditor extends DefaultCellEditor {
+
+        private final JButton button = new JButton();
+        private String label;
+        private int row;
+
+        public ButtonEditor(JCheckBox checkBox) {
+            super(checkBox);
+            button.setOpaque(true);
+
+            button.addActionListener(e -> {
+                // Rownya dari getTableCellEditorComponent
+                try {
+                    // convert view row -> model row just (buat kalau misal tablenya ada sorter)
+                    int modelRow = jTable1.convertRowIndexToModel(row);
+                    String kodeMatkul = jTable1.getModel().getValueAt(modelRow, 0).toString(); // kolom 0 = NIM
+                    //buka Kelas sebelum stop editting
+                    new kelasMatkulSA(kodeMatkul).setVisible(true);
+                    matkulSA.this.dispose();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                } finally {
+                    fireEditingStopped();
+                }
+            });
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value,
+                boolean isSelected, int row, int column) {
+            this.row = row;
+            label = (value == null) ? "" : value.toString();
+            button.setText(label);
+            return button;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return label;
+        }
     }
 
     /**
@@ -28,21 +118,130 @@ public class matkulSA extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel2 = new javax.swing.JPanel();
+        BTNhome = new java.awt.Button();
+        BTNdosen = new java.awt.Button();
+        BTNmahasiswa1 = new java.awt.Button();
+        BTNmatkul1 = new java.awt.Button();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jPanel2.setBackground(new java.awt.Color(248, 214, 19));
+
+        BTNhome.setLabel("Home");
+        BTNhome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTNhomeActionPerformed(evt);
+            }
+        });
+
+        BTNdosen.setLabel("Dosen");
+        BTNdosen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTNdosenActionPerformed(evt);
+            }
+        });
+
+        BTNmahasiswa1.setLabel("Mahasiswa");
+        BTNmahasiswa1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTNmahasiswa1ActionPerformed(evt);
+            }
+        });
+
+        BTNmatkul1.setLabel("Matkul");
+        BTNmatkul1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTNmatkul1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(BTNmahasiswa1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, Short.MAX_VALUE)
+                    .addComponent(BTNhome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(BTNdosen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(BTNmatkul1, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(BTNhome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 71, Short.MAX_VALUE)
+                .addComponent(BTNdosen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
+                .addComponent(BTNmahasiswa1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(121, 121, 121))
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addGap(57, 57, 57)
+                    .addComponent(BTNmatkul1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(219, Short.MAX_VALUE)))
+        );
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "NIM", "Nama", "IPK", "KST"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void BTNhomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNhomeActionPerformed
+        new DashboardSA().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_BTNhomeActionPerformed
+
+    private void BTNdosenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNdosenActionPerformed
+        new dosenSA().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_BTNdosenActionPerformed
+
+    private void BTNmahasiswa1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNmahasiswa1ActionPerformed
+        new mahasiswaSA().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_BTNmahasiswa1ActionPerformed
+
+    private void BTNmatkul1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNmatkul1ActionPerformed
+
+    }//GEN-LAST:event_BTNmatkul1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -70,5 +269,12 @@ public class matkulSA extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private java.awt.Button BTNdosen;
+    private java.awt.Button BTNhome;
+    private java.awt.Button BTNmahasiswa1;
+    private java.awt.Button BTNmatkul1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }

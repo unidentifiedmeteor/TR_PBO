@@ -8,17 +8,20 @@ package View;
  *
  * @author A C E R
  */
-public class DasboardMahasiswa extends javax.swing.JFrame {
+public class DashboardMahasiswa extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DasboardMahasiswa.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DashboardMahasiswa.class.getName());
 
     /**
      * Creates new form DasboardMahasiswa
      */
-    public DasboardMahasiswa() {
+    public DashboardMahasiswa() {
         initComponents();
     }
-
+    
+    public DashboardMahasiswa(String id) {
+        initComponents();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -184,7 +187,7 @@ public class DasboardMahasiswa extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new DasboardMahasiswa().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new DashboardMahasiswa().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

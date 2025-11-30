@@ -4,19 +4,133 @@
  */
 package View;
 
+import java.awt.Component;
+import javax.swing.*;
+import javax.swing.table.*;
+import Controller.MahasiswaSAController;
+import Model.MahasiswaSAMod;
+import Model.MahasiswaDAO;
+import java.util.List;
+import javax.swing.SwingWorker;
+
 /**
  *
  * @author Lenovo
  */
 public class mahasiswaSA extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(mahasiswaSA.class.getName());
+    private final MahasiswaSAController controller;
 
     /**
      * Creates new form mahasiswaSA
      */
     public mahasiswaSA() {
         initComponents();
+        this.controller = new MahasiswaSAController(new MahasiswaDAO());
+        loadTableMahasiswa();
+    }
+
+    private void loadTableMahasiswa() {
+        //Di model ini semua cellnya gabisa diedit kecuali kolom yang ada buttonnya
+        DefaultTableModel model = new DefaultTableModel(new Object[]{"NIM", "Nama", "IPK", "KST"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                //Ini yang indexnya 3 adalah kolom KST, editable biar button bisa di klik
+                return column == 3;
+            }
+        };
+
+            jTable1.setModel(model);
+
+            jTable1.getColumn("KST").setCellRenderer(new ButtonRenderer());
+            jTable1.getColumn("KST").setCellEditor(new ButtonEditor(new JCheckBox())); // editor uses a checkbox constructor pattern
+
+            jTable1.getColumnModel().getColumn(0).setPreferredWidth(100); // NIM
+            jTable1.getColumnModel().getColumn(1).setPreferredWidth(220); // Nama
+            jTable1.getColumnModel().getColumn(2).setPreferredWidth(50);  // IPK
+            jTable1.getColumnModel().getColumn(3).setPreferredWidth(80);  // Button KST
+            
+            new SwingWorker<List<MahasiswaSAMod>, Void>() {
+            @Override
+            protected List<MahasiswaSAMod> doInBackground() throws Exception {
+                return controller.getAllMahasiswa(); // DAO call is inside controller
+            }
+            @Override
+            protected void done() {
+                try {
+                    List<MahasiswaSAMod> rows = get();
+                    for (MahasiswaSAMod m : rows) {
+                        model.addRow(new Object[]{m.getNim(), m.getNama(), m.getIpk(), "Lihat"});
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(mahasiswaSA.this, "Gagal load: "+ex.getMessage());
+                }
+            }
+        }.execute();
+    }
+
+    private static class ButtonRenderer extends JButton implements TableCellRenderer {
+
+        public ButtonRenderer() {
+            setOpaque(true);
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus,
+                int row, int column) {
+            setText(value == null ? "" : value.toString());
+            return this;
+        }
+    }
+
+    private class ButtonEditor extends DefaultCellEditor {
+
+        private final JButton button = new JButton();
+        private String label;
+        private int row;
+
+        public ButtonEditor(JCheckBox checkBox) {
+            super(checkBox);
+            button.setOpaque(true);
+
+            button.addActionListener(e -> {
+                // Rownya dari getTableCellEditorComponent
+                try {
+                    // convert view row -> model row just (buat kalau misal tablenya ada sorter)
+                    int modelRow = jTable1.convertRowIndexToModel(row);
+                    String nim = jTable1.getModel().getValueAt(modelRow, 0).toString(); // kolom 0 = NIM
+                    //buka KST sebelum stop editting
+                    bukaKST(nim);
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                } finally {
+                    fireEditingStopped();
+                }
+            });
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value,
+                boolean isSelected, int row, int column) {
+            this.row = row;
+            label = (value == null) ? "" : value.toString();
+            button.setText(label);
+            return button;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return label;
+        }
+    }
+
+    private void bukaKST(String nim) {
+        controller.bukaKST(nim);
+        this.dispose();
     }
 
     /**
@@ -135,7 +249,8 @@ public class mahasiswaSA extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BTNhomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNhomeActionPerformed
-        // TODO add your handling code here:
+        new DashboardSA().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_BTNhomeActionPerformed
 
     private void BTNdosenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNdosenActionPerformed
@@ -144,8 +259,7 @@ public class mahasiswaSA extends javax.swing.JFrame {
     }//GEN-LAST:event_BTNdosenActionPerformed
 
     private void BTNmahasiswa1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNmahasiswa1ActionPerformed
-        new mahasiswaSA().setVisible(true);
-        this.dispose();
+        
     }//GEN-LAST:event_BTNmahasiswa1ActionPerformed
 
     private void BTNmatkul1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNmatkul1ActionPerformed

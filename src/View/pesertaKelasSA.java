@@ -4,19 +4,127 @@
  */
 package View;
 
+import Controller.KelasMatkulSAController;
+import Model.DosenDAO;
+import java.awt.Component;
+import javax.swing.*;
+import javax.swing.table.*;
+import Model.koneksi;
+import java.sql.Connection;
+import Model.KelasDAO;
+import Model.MatkulDAO;
+import Model.MatkulDosenDAO;
+
 /**
  *
  * @author Lenovo
  */
-public class kelasSA extends javax.swing.JFrame {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(kelasSA.class.getName());
+public class pesertaKelasSA extends javax.swing.JFrame {
+
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(pesertaKelasSA.class.getName());
+    private final KelasMatkulSAController controller;
+    private final String kodeKelas;
 
     /**
-     * Creates new form kelasSA
+     * Creates new form mahasiswaSA
      */
-    public kelasSA() {
+    public pesertaKelasSA(String kodeKelas) {
         initComponents();
+        this.kodeKelas = kodeKelas;
+        Connection conn = koneksi.getConnection();
+        this.controller = new KelasMatkulSAController(new KelasDAO(conn), new MatkulDAO(conn), 
+                new DosenDAO(conn), new MatkulDosenDAO(conn));
+        loadTablePesertaKelas();
+        kodeDosenMatkul.setText("Kelas: " + kodeKelas);
+    }
+
+    private void loadTablePesertaKelas() {
+        DefaultTableModel model = new DefaultTableModel(new Object[]{"NIM", "Nama", "Hapus"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column == 2;
+            }
+        };
+
+        jTable1.setModel(model);
+
+        jTable1.getColumn("Hapus").setCellRenderer(new pesertaKelasSA.ButtonRenderer());
+        jTable1.getColumn("Hapus").setCellEditor(new pesertaKelasSA.ButtonEditor(new JCheckBox())); // editor uses a checkbox constructor pattern
+
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(100);
+        jTable1.getColumnModel().getColumn(1).setPreferredWidth(250);
+
+        controller.loadPesertaKelas(model, kodeKelas);
+    }
+
+    private static class ButtonRenderer extends JButton implements TableCellRenderer {
+
+        public ButtonRenderer() {
+            setOpaque(true);
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus,
+                int row, int column) {
+            setText(value == null ? "" : value.toString());
+            return this;
+        }
+    }
+
+    private class ButtonEditor extends DefaultCellEditor {
+
+        private final JButton button = new JButton();
+        private String label;
+        private int row;
+
+        public ButtonEditor(JCheckBox checkBox) {
+            super(checkBox);
+            button.setOpaque(true);
+
+            button.addActionListener(e -> {
+                // Rownya dari getTableCellEditorComponent
+                try {
+                    // convert view row -> model row just (buat kalau misal tablenya ada sorter)
+                    int modelRow = jTable1.convertRowIndexToModel(row);
+                    String nim = jTable1.getModel().getValueAt(modelRow, 0).toString(); // kolom 0 = NIM
+                    //buka Kelas sebelum stop editting
+                    hapusPeserta(nim);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                } finally {
+                    fireEditingStopped();
+                }
+            });
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value,
+                boolean isSelected, int row, int column) {
+            this.row = row;
+            label = (value == null) ? "" : value.toString();
+            button.setText(label);
+            return button;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return label;
+        }
+    }
+
+    private void hapusPeserta(String nim) {
+        int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "Hapus mahasiswa " + nim + " dari kelas ini?",
+                "Konfirmasi",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            controller.hapusPeserta(kodeKelas, nim);
+            loadTablePesertaKelas(); // refresh
+        }
     }
 
     /**
@@ -35,7 +143,7 @@ public class kelasSA extends javax.swing.JFrame {
         BTNmatkul1 = new java.awt.Button();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        btnDaftar = new javax.swing.JButton();
+        kodeDosenMatkul = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -105,20 +213,18 @@ public class kelasSA extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Kode Kelas", "Nama Kelas", "Dosen Pengajar"
+                "NIM", "Nama", "IPK", "KST"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        btnDaftar.setText("daftar peserta");
-        btnDaftar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDaftarActionPerformed(evt);
-            }
-        });
+        kodeDosenMatkul.setText("Kode Dosen");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -126,30 +232,33 @@ public class kelasSA extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnDaftar)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(205, 205, 205)
+                        .addComponent(kodeDosenMatkul)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(kodeDosenMatkul)
+                .addGap(10, 10, 10)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addComponent(btnDaftar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void BTNhomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNhomeActionPerformed
-        // TODO add your handling code here:
+        new DashboardSA().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_BTNhomeActionPerformed
 
     private void BTNdosenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNdosenActionPerformed
@@ -167,43 +276,40 @@ public class kelasSA extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_BTNmatkul1ActionPerformed
 
-    private void btnDaftarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDaftarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnDaftarActionPerformed
-
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new kelasSA().setVisible(true));
-    }
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+//            logger.log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//        String kodeDosen = null;
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(() -> new matkulDosenSA(kodeDosen).setVisible(true));
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Button BTNdosen;
     private java.awt.Button BTNhome;
     private java.awt.Button BTNmahasiswa1;
     private java.awt.Button BTNmatkul1;
-    private javax.swing.JButton btnDaftar;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JLabel kodeDosenMatkul;
     // End of variables declaration//GEN-END:variables
 }

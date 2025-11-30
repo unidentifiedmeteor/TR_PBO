@@ -4,9 +4,16 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/A%20C%20E%20R/OneDrive/文件/NetBeansProjects/TR_PBO/src/View/dashboardDosen.java</file>
-            <file>file:/C:/Users/A%20C%20E%20R/OneDrive/文件/NetBeansProjects/TR_PBO/src/View/DasboardMahasiswa.java</file>
             <file>file:/C:/Users/A%20C%20E%20R/OneDrive/文件/NetBeansProjects/TR_PBO/src/Model/koneksi.java</file>
             <file>file:/C:/Users/A%20C%20E%20R/OneDrive/文件/NetBeansProjects/TR_PBO/src/View/dosenSA.java</file>
+            <file>file:/C:/Users/A%20C%20E%20R/OneDrive/文件/NetBeansProjects/TR_PBO/src/Model/AbsenDAO.java</file>
+            <file>file:/C:/Users/A%20C%20E%20R/OneDrive/文件/NetBeansProjects/TR_PBO/src/Model/AbsenSAMod.java</file>
+            <file>file:/C:/Users/A%20C%20E%20R/OneDrive/文件/NetBeansProjects/TR_PBO/src/Model/DashboardSAMod.java</file>
+            <file>file:/C:/Users/A%20C%20E%20R/OneDrive/文件/NetBeansProjects/TR_PBO/src/Model/cekLogin.java</file>
+            <file>file:/C:/Users/A%20C%20E%20R/OneDrive/文件/NetBeansProjects/TR_PBO/src/View/pesertaKelasSA.java</file>
+            <file>file:/C:/Users/A%20C%20E%20R/OneDrive/文件/NetBeansProjects/TR_PBO/src/Model/DosenDAO.java</file>
+            <file>file:/C:/Users/A%20C%20E%20R/OneDrive/文件/NetBeansProjects/TR_PBO/src/Model/MahasiswaSAMod.java</file>
+            <file>file:/C:/Users/A%20C%20E%20R/OneDrive/文件/NetBeansProjects/TR_PBO/src/Model/MahasiswaDAO.java</file>
         </group>
     </open-files>
 </project-private>

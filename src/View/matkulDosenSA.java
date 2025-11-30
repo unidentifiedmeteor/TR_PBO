@@ -9,52 +9,64 @@ import javax.swing.*;
 import javax.swing.table.*;
 import Model.koneksi;
 import java.sql.Connection;
+import Model.MatkulDAO;
+import Controller.MatkulDosenSAController;
 import Model.DosenDAO;
-import Controller.DosenSAController;
+import Model.KelasDAO;
+import Model.MatkulDosenDAO;
+import java.util.List;
 
 /**
  *
  * @author Lenovo
  */
-public class dosenSA extends javax.swing.JFrame {
+public class matkulDosenSA extends javax.swing.JFrame {
 
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(dosenSA.class.getName());
-    private final DosenSAController controller;
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(matkulDosenSA.class.getName());
+    private final MatkulDosenSAController controller;
+    private final String kodeDosen;   // dosen yang lagi diliat
 
     /**
      * Creates new form mahasiswaSA
      */
-    public dosenSA() {
+    public matkulDosenSA(String kodeDosen) {
         initComponents();
+        this.kodeDosen = kodeDosen;
         Connection conn = koneksi.getConnection();
-        this.controller = new DosenSAController(new DosenDAO(conn));
-        loadTableDosen();
+        this.controller = new MatkulDosenSAController(new MatkulDAO(conn),
+                new MatkulDosenDAO(conn), new DosenDAO(conn), new KelasDAO(conn));
+        loadComboMatkul();
+        loadTableMatkulDosen();
+        kodeDosenMatkul.setText("Dosen: " + kodeDosen);
     }
 
-    private void loadTableDosen() {
-        //Di model ini semua cellnya gabisa diedit kecuali kolom yang ada buttonnya
-        DefaultTableModel model = new DefaultTableModel(new Object[]{"Kode Dosen", "Nama Dosen", "Matkul", "Kelas"}, 0) {
+    private void loadComboMatkul() {
+        cbMatkul.removeAllItems();
+        List<String> dosenList = controller.getStringMatkul();
+
+        for (String d : dosenList) {
+            cbMatkul.addItem(d);
+        }
+    }
+
+    private void loadTableMatkulDosen() {
+        DefaultTableModel model = new DefaultTableModel(new Object[]{"Kode Matkul", "Nama Matkul", "Hapus"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                //Ini yang indexnya 2 dan 3adalah kolom Kelas, editable biar button bisa di klik
-                return column == 2 || column == 3;
+                return column == 2;
             }
         };
 
         jTable1.setModel(model);
 
-        jTable1.getColumn("Matkul").setCellRenderer(new ButtonRenderer());
-        jTable1.getColumn("Matkul").setCellEditor(new ButtonEditor(new JCheckBox(), 2)); // editor uses a checkbox constructor pattern
-
-        jTable1.getColumn("Kelas").setCellRenderer(new ButtonRenderer());
-        jTable1.getColumn("Kelas").setCellEditor(new ButtonEditor(new JCheckBox(), 3)); // editor uses a checkbox constructor pattern
+        jTable1.getColumn("Hapus").setCellRenderer(new matkulDosenSA.ButtonRenderer());
+        jTable1.getColumn("Hapus").setCellEditor(new matkulDosenSA.ButtonEditor(new JCheckBox()));
 
         jTable1.getColumnModel().getColumn(0).setPreferredWidth(100);
         jTable1.getColumnModel().getColumn(1).setPreferredWidth(250);
-        jTable1.getColumnModel().getColumn(2).setPreferredWidth(80);
-        jTable1.getColumnModel().getColumn(3).setPreferredWidth(80);
 
-        controller.loadDosen(model);
+        // isi data hanya matkul untuk dosen ini
+        controller.loadMatkulDosen(model, kodeDosen);
     }
 
     private static class ButtonRenderer extends JButton implements TableCellRenderer {
@@ -77,11 +89,9 @@ public class dosenSA extends javax.swing.JFrame {
         private final JButton button = new JButton();
         private String label;
         private int row;
-        private final int col;//biar tau ini editornya kolom ke berapa
 
-        public ButtonEditor(JCheckBox checkBox, int column) {
+        public ButtonEditor(JCheckBox checkBox) {
             super(checkBox);
-            this.col = column;
             button.setOpaque(true);
 
             button.addActionListener(e -> {
@@ -89,17 +99,8 @@ public class dosenSA extends javax.swing.JFrame {
                 try {
                     // convert view row -> model row just (buat kalau misal tablenya ada sorter)
                     int modelRow = jTable1.convertRowIndexToModel(row);
-
-                    if (col == 2) {
-                        String kodeDosen = jTable1.getModel().getValueAt(modelRow, 0).toString(); // kolom 0
-                        new matkulDosenSA(kodeDosen).setVisible(true);
-                        dosenSA.this.dispose();
-                        dosenSA.this.dispose();
-                    } else if (col == 3) {
-                        String kodeDosen = jTable1.getModel().getValueAt(modelRow, 0).toString(); // kolom 0
-                        new kelasDosenSA(kodeDosen).setVisible(true);
-                        dosenSA.this.dispose();
-                    }
+                    String kodeMatkul = jTable1.getModel().getValueAt(modelRow, 0).toString();
+                    hapusMatkulDosen(kodeMatkul);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 } finally {
@@ -123,6 +124,20 @@ public class dosenSA extends javax.swing.JFrame {
         }
     }
 
+    private void hapusMatkulDosen(String kodeMatkul) {
+        int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "Yakin?",
+                "Yakin ganih?",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            controller.hapusRelasiDosenMatkulDanKelas(kodeDosen, kodeMatkul);
+            loadTableMatkulDosen();
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -139,6 +154,10 @@ public class dosenSA extends javax.swing.JFrame {
         BTNmatkul1 = new java.awt.Button();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        kodeDosenMatkul = new javax.swing.JLabel();
+        btnTambahMatkul = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        cbMatkul = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -219,20 +238,54 @@ public class dosenSA extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
+        kodeDosenMatkul.setText("Kode Dosen");
+
+        btnTambahMatkul.setText("Tambah Matkull");
+        btnTambahMatkul.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTambahMatkulActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Tambah Matkul");
+
+        cbMatkul.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(205, 205, 205)
+                        .addComponent(kodeDosenMatkul)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbMatkul, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnTambahMatkul))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(kodeDosenMatkul)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbMatkul, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnTambahMatkul)
+                .addGap(23, 23, 23))
         );
 
         pack();
@@ -258,38 +311,74 @@ public class dosenSA extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_BTNmatkul1ActionPerformed
 
+    private void btnTambahMatkulActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahMatkulActionPerformed
+        String selected = (String) cbMatkul.getSelectedItem();
+        if (selected == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Pilih matkul dulu.",
+                    "Validasi",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String kodeMatkul = selected.split(" - ")[0].trim();
+
+        try {
+            controller.tambahRelasiDosenMatkul(kodeDosen, kodeMatkul);
+
+            JOptionPane.showMessageDialog(this,
+                    "Matkul berhasil ditambahkan ke dosen.",
+                    "Sukses",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+            loadTableMatkulDosen();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                    "Gagal menambah relasi: " + ex.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnTambahMatkulActionPerformed
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new dosenSA().setVisible(true));
-    }
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+//            logger.log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//        String kodeDosen = null;
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(() -> new matkulDosenSA(kodeDosen).setVisible(true));
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Button BTNdosen;
     private java.awt.Button BTNhome;
     private java.awt.Button BTNmahasiswa1;
     private java.awt.Button BTNmatkul1;
+    private javax.swing.JButton btnTambahMatkul;
+    private javax.swing.JComboBox<String> cbMatkul;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JLabel kodeDosenMatkul;
     // End of variables declaration//GEN-END:variables
 }
