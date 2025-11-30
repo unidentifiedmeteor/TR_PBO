@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 29, 2025 at 12:07 PM
+-- Generation Time: Nov 30, 2025 at 10:23 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,21 @@ SET time_zone = "+00:00";
 --
 -- Database: `tr_pbo`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `absen`
+--
+
+CREATE TABLE `absen` (
+  `id_absen` bigint(20) NOT NULL,
+  `id_pertemuan` int(11) NOT NULL,
+  `NIM` char(10) NOT NULL,
+  `waktu_absen` datetime NOT NULL DEFAULT current_timestamp(),
+  `status` enum('HADIR','SAKIT','IZIN','ALPHA') DEFAULT 'HADIR',
+  `surat_ijin` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -81,7 +96,8 @@ CREATE TABLE `kelas` (
 
 INSERT INTO `kelas` (`kode_kelas`, `nama_kelas`, `hari`, `jadwal_mulai`, `jadwal_selesai`, `kode_dosen`, `kode_matkul`, `ruangan`) VALUES
 ('TC212A', 'Pemrograman Berorientasi Objek A', 'Senin', '12:00:00', '15:00:00', 'D001', 'TC212', 'FTI455'),
-('TC212B', 'Pemrograman Berorientasi Objek B', 'Senin', '07:00:00', '10:00:00', 'D001', 'TC212', 'FTI455');
+('TC212B', 'Pemromgraman Berorientasi Objek B', 'Senin', '07:00:00', '10:00:00', 'D001', 'TC212', 'FTI455'),
+('TC212C', 'OOOOIIII EDITTTT', 'Jumat', '12:00:00', '15:00:00', 'D001', 'TC212', 'FTI455');
 
 -- --------------------------------------------------------
 
@@ -145,6 +161,27 @@ INSERT INTO `matkul` (`kode_matkul`, `nama_matkul`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `pertemuan`
+--
+
+CREATE TABLE `pertemuan` (
+  `id_pertemuan` int(11) NOT NULL,
+  `kode_kelas` char(10) NOT NULL,
+  `tanggal` date NOT NULL,
+  `pertemuan_ke` int(11) DEFAULT NULL,
+  `materi` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `pertemuan`
+--
+
+INSERT INTO `pertemuan` (`id_pertemuan`, `kode_kelas`, `tanggal`, `pertemuan_ke`, `materi`) VALUES
+(1, 'TC212A', '2025-12-01', 1, 'Percobaan Absensi');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `super_admin`
 --
 
@@ -157,6 +194,14 @@ CREATE TABLE `super_admin` (
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `absen`
+--
+ALTER TABLE `absen`
+  ADD PRIMARY KEY (`id_absen`),
+  ADD UNIQUE KEY `uk_absen_pertemuan_nim` (`id_pertemuan`,`NIM`),
+  ADD KEY `fk_absen_mahasiswa` (`NIM`);
 
 --
 -- Indexes for table `dosen`
@@ -199,14 +244,44 @@ ALTER TABLE `matkul`
   ADD PRIMARY KEY (`kode_matkul`);
 
 --
+-- Indexes for table `pertemuan`
+--
+ALTER TABLE `pertemuan`
+  ADD PRIMARY KEY (`id_pertemuan`),
+  ADD KEY `fk_pertemuan_kelas` (`kode_kelas`);
+
+--
 -- Indexes for table `super_admin`
 --
 ALTER TABLE `super_admin`
   ADD PRIMARY KEY (`Admin_ID`);
 
 --
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `absen`
+--
+ALTER TABLE `absen`
+  MODIFY `id_absen` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `pertemuan`
+--
+ALTER TABLE `pertemuan`
+  MODIFY `id_pertemuan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `absen`
+--
+ALTER TABLE `absen`
+  ADD CONSTRAINT `fk_absen_mahasiswa` FOREIGN KEY (`NIM`) REFERENCES `mahasiswa` (`NIM`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_absen_pertemuan` FOREIGN KEY (`id_pertemuan`) REFERENCES `pertemuan` (`id_pertemuan`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `dosen_matkul`
@@ -228,6 +303,12 @@ ALTER TABLE `kelas`
 ALTER TABLE `mahasiswa_kelas`
   ADD CONSTRAINT `mahasiswa_kelas_ibfk_1` FOREIGN KEY (`NIM`) REFERENCES `mahasiswa` (`NIM`),
   ADD CONSTRAINT `mahasiswa_kelas_ibfk_2` FOREIGN KEY (`kode_kelas`) REFERENCES `kelas` (`kode_kelas`);
+
+--
+-- Constraints for table `pertemuan`
+--
+ALTER TABLE `pertemuan`
+  ADD CONSTRAINT `fk_pertemuan_kelas` FOREIGN KEY (`kode_kelas`) REFERENCES `kelas` (`kode_kelas`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -46,7 +46,8 @@ public class KelasMatkulSAController {
                 k.getJadwalSelesai(),
                 k.getRuangan(),
                 "Peserta",
-                "Hapus"
+                "Hapus",
+                "Absensi"
             });
         }
     }

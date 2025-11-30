@@ -65,10 +65,10 @@ public class kelasMatkulSA extends javax.swing.JFrame {
     }
 
     private void loadTableKelas() {
-        DefaultTableModel model = new DefaultTableModel(new Object[]{"Kode Kelas", "Nama Kelas", "Kode Dosen", "Hari", "Mulai", "Selesai", "Ruangan", "Peserta", "Hapus"}, 0) {
+        DefaultTableModel model = new DefaultTableModel(new Object[]{"Kode Kelas", "Nama Kelas", "Kode Dosen", "Hari", "Mulai", "Selesai", "Ruangan", "Peserta", "Hapus", "Absensi"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 7 || column == 8;
+                return column == 7 || column == 8 || column == 9;
             }
         };
 
@@ -80,6 +80,9 @@ public class kelasMatkulSA extends javax.swing.JFrame {
         jTable1.getColumn("Hapus").setCellRenderer(new ButtonRenderer());
         jTable1.getColumn("Hapus").setCellEditor(new ButtonEditor(new JCheckBox(), 8)); // editor uses a checkbox constructor pattern
 
+        jTable1.getColumn("Absensi").setCellRenderer(new ButtonRenderer());
+        jTable1.getColumn("Absensi").setCellEditor(new ButtonEditor(new JCheckBox(), 9)); // editor uses a checkbox constructor pattern
+
         jTable1.getColumnModel().getColumn(0).setPreferredWidth(80);
         jTable1.getColumnModel().getColumn(1).setPreferredWidth(250);
         jTable1.getColumnModel().getColumn(2).setPreferredWidth(100);
@@ -89,6 +92,7 @@ public class kelasMatkulSA extends javax.swing.JFrame {
         jTable1.getColumnModel().getColumn(6).setPreferredWidth(80);
         jTable1.getColumnModel().getColumn(7).setPreferredWidth(80);
         jTable1.getColumnModel().getColumn(8).setPreferredWidth(80);
+        jTable1.getColumnModel().getColumn(9).setPreferredWidth(80);
 
         controller.loadKelasMatkul(model, kodeMatkul);
     }
@@ -126,7 +130,7 @@ public class kelasMatkulSA extends javax.swing.JFrame {
                     // convert view row -> model row just (buat kalau misal tablenya ada sorter)
                     int modelRow = jTable1.convertRowIndexToModel(row);
 
-                    if (col == 7) {
+                    if (col == 7){
                         String kodeKelas = jTable1.getModel().getValueAt(modelRow, 0).toString();
                         new pesertaKelasSA(kodeKelas).setVisible(true);
                         kelasMatkulSA.this.dispose();
@@ -134,6 +138,10 @@ public class kelasMatkulSA extends javax.swing.JFrame {
                         String kodeKelas = jTable1.getModel().getValueAt(modelRow, 0).toString();
                         String kodeDosen = jTable1.getModel().getValueAt(modelRow, 2).toString();
                         hapusKelas(kodeMatkul, kodeKelas, kodeDosen);
+                    } else if (col == 9) {
+                        String kodeKelas = jTable1.getModel().getValueAt(modelRow, 0).toString();
+                        new absensiKelasSA(kodeKelas).setVisible(true);
+                        kelasMatkulSA.this.dispose();
                     }
 
                 } catch (Exception ex) {
