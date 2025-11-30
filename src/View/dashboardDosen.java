@@ -21,12 +21,9 @@ public class dashboardDosen extends javax.swing.JFrame {
         if (id != null && !id.isEmpty()) {
             try {
                 DosenController controller = new DosenController();
-                // Asumsi: getDosenById mengambil data dari database
                 Dosen dosen = controller.getDosenById(id);
                 
                 if (dosen != null) {
-                    // Tampilkan nama dosen pada jLabel1 (sebagai label title Dashboard Dosen)
-                    // PENTING: Jika Anda menambahkan JLabel khusus untuk nama, ganti jLabel1
                     jLabel1.setText("Dashboard Dosen - Selamat Datang, " + dosen.getNama()); 
                     logger.log(Level.INFO, "Dosen {0} berhasil memuat dashboard.", dosen.getNama());
                 } else {
@@ -163,10 +160,7 @@ public class dashboardDosen extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
        try {
-            cekkelas cekKelas = new cekkelas(this.idDosen);
-            cekkelas.setVisible(true);
-            // Opsional: Jika Cek Kelas dianggap sebagai sub-menu, dashboard bisa disembunyikan
-            // this.dispose(); 
+            Cekkelas cekKelas = new Cekkelas(this.idDosen);
         } catch (Exception ex) {
             logger.log(Level.SEVERE, "Gagal membuka form Cek Kelas.", ex);
             JOptionPane.showMessageDialog(this, "Gagal membuka Cek Kelas: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

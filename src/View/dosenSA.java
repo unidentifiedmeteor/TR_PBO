@@ -11,7 +11,6 @@ import Model.koneksi;
 import java.sql.Connection;
 import Model.DosenDAO;
 import Controller.DosenSAController;
-import java.sql.SQLException;
 
 /**
  *
@@ -25,14 +24,14 @@ public class dosenSA extends javax.swing.JFrame {
     /**
      * Creates new form mahasiswaSA
      */
-    public dosenSA() throws SQLException {
+    public dosenSA() {
         initComponents();
         Connection conn = koneksi.getConnection();
         this.controller = new DosenSAController(new DosenDAO(conn));
         loadTableDosen();
     }
 
-    private void loadTableDosen() throws SQLException {
+    private void loadTableDosen() {
         //Di model ini semua cellnya gabisa diedit kecuali kolom yang ada buttonnya
         DefaultTableModel model = new DefaultTableModel(new Object[]{"Kode Dosen", "Nama Dosen", "Matkul", "Kelas"}, 0) {
             @Override
@@ -55,7 +54,7 @@ public class dosenSA extends javax.swing.JFrame {
         jTable1.getColumnModel().getColumn(2).setPreferredWidth(80);
         jTable1.getColumnModel().getColumn(3).setPreferredWidth(80);
 
-        controller.loadDosen(model);
+//        controller.loadDosen(model);
     }
 
     private static class ButtonRenderer extends JButton implements TableCellRenderer {

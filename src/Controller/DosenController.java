@@ -1,11 +1,11 @@
 package Controller;
 
 import Model.Dosen;
+import Model.koneksi; // <-- Perubahan 1: Import class koneksi dari package Model
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 
 public class DosenController {
 
@@ -17,8 +17,15 @@ public class DosenController {
         ResultSet rs = null;
 
         try {
-            // Dapatkan koneksi
-            conn = Koneksi.getConnection();
+            // Dapatkan koneksi dari Model.koneksi
+            conn = koneksi.getConnection(); 
+            
+            // Cek jika koneksi gagal (getConnection mengembalikan null jika gagal)
+            if (conn == null) {
+                // throw new SQLException("Gagal mendapatkan koneksi database.");
+                return null; // Lebih aman mengembalikan null jika koneksi gagal
+            }
+            
             ps = conn.prepareStatement(sql);
             ps.setString(1, id); // Set ID Dosen ke placeholder pertama
             
@@ -34,17 +41,18 @@ public class DosenController {
                 // Set properti lain jika ada...
             }
         } finally {
-            // Pastikan semua resource ditutup
-            if (rs != null) rs.close();
-            if (ps != null) ps.close();
-            // Koneksi bisa tetap dibuka, atau ditutup tergantung strategi koneksi Anda
-            // Jika Anda menggunakan pool koneksi atau ingin menutupnya segera:
-            // if (conn != null) conn.close(); 
-            // Namun, menggunakan utilitas Koneksi.closeConnection() dari class Koneksi lebih baik jika itu yang Anda implementasikan.
-            Koneksi.closeConnection(conn); 
+            // Perubahan 2: Tutup ResultSet, PreparedStatement, dan Connection secara manual
+            // Karena class koneksi Anda tidak menyediakan metode closeConnection()
+            if (rs != null) {
+                try { rs.close(); } catch (SQLException e) { /* log error */ }
+            }
+            if (ps != null) {
+                try { ps.close(); } catch (SQLException e) { /* log error */ }
+            }
+            if (conn != null) {
+                try { conn.close(); } catch (SQLException e) { /* log error */ }
+            }
         }
         return dosen;
     }
-    
-    // Tambahkan metode lain yang relevan di sini (misalnya: loginDosen, ambilSemuaKelas, dll.)
 }
