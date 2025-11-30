@@ -14,9 +14,9 @@ public class AbsenSAMod {
 
     private String nim;
     private String namaMahasiswa;
-    private String status;        // HADIR / SAKIT / IZIN / ALPHA (bisa null)
-    private Timestamp waktuAbsen; // bisa null kalau belum absen
-    private String suratIjin;     // path atau URL, bisa null
+    private String status;
+    private Timestamp waktuAbsen;
+    private String suratIjin;
 
     public String getNim() {
         return nim;

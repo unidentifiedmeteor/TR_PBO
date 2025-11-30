@@ -10,6 +10,7 @@ import java.util.List;
  *
  * @author Lenovo
  */
+//absen 1 pertemuan seluruh mahasiswa
 public class AbsenDAO {
 
 private final Connection conn;

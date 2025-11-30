@@ -12,58 +12,74 @@ import Model.MahasiswaSAMod;
 import Model.MahasiswaDAO;
 import java.util.List;
 import javax.swing.SwingWorker;
+import Controller.KSTSAController;
+import Model.KSTRowSAMod;
+import Model.KSTDAO;
 
 /**
  *
  * @author Lenovo
  */
-public class mahasiswaSA extends javax.swing.JFrame {
+public class KSTSA extends javax.swing.JFrame {
 
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(mahasiswaSA.class.getName());
-    private final MahasiswaSAController controller;
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(KSTSA.class.getName());
+    private final KSTSAController controller;
+    private final String nim;
 
-
-    public mahasiswaSA() {
+    public KSTSA(String nim) {
+        this.nim = nim;
         initComponents();
-        this.controller = new MahasiswaSAController(new MahasiswaDAO());
-        loadTableMahasiswa();
+        this.controller = new KSTSAController(new KSTDAO());
+        loadTableKST();
     }
 
-    private void loadTableMahasiswa() {
-        //Di model ini semua cellnya gabisa diedit kecuali kolom yang ada buttonnya
-        DefaultTableModel model = new DefaultTableModel(new Object[]{"NIM", "Nama", "IPK", "KST"}, 0) {
+    private void loadTableKST() {
+        DefaultTableModel model = new DefaultTableModel(
+                new Object[]{"Kode Kelas", "Kode Matkul", "Nama Matkul", "Dosen", "Hari", "Jam", "Ruang", "Absensi"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                //Ini yang indexnya 3 adalah kolom KST, editable biar button bisa di klik
-                return column == 3;
+                // cuma kolom Absensi (index 7) yang bisa diklik
+                return column == 7;
             }
         };
+        jTable1.setModel(model);
 
-            jTable1.setModel(model);
+        jTable1.getColumn("Absensi").setCellRenderer(new ButtonRenderer());
+        jTable1.getColumn("Absensi").setCellEditor(new ButtonEditor(new JCheckBox())); // editor uses a checkbox constructor pattern
 
-            jTable1.getColumn("KST").setCellRenderer(new ButtonRenderer());
-            jTable1.getColumn("KST").setCellEditor(new ButtonEditor(new JCheckBox())); // editor uses a checkbox constructor pattern
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(80);
+        jTable1.getColumnModel().getColumn(1).setPreferredWidth(80);
+        jTable1.getColumnModel().getColumn(2).setPreferredWidth(150);
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(150);
+        jTable1.getColumnModel().getColumn(1).setPreferredWidth(80);
+        jTable1.getColumnModel().getColumn(2).setPreferredWidth(80);
+        jTable1.getColumnModel().getColumn(3).setPreferredWidth(80);
 
-            jTable1.getColumnModel().getColumn(0).setPreferredWidth(100); // NIM
-            jTable1.getColumnModel().getColumn(1).setPreferredWidth(220); // Nama
-            jTable1.getColumnModel().getColumn(2).setPreferredWidth(50);  // IPK
-            jTable1.getColumnModel().getColumn(3).setPreferredWidth(80);  // Button KST
-            
-            new SwingWorker<List<MahasiswaSAMod>, Void>() {
+        new SwingWorker<List<KSTRowSAMod>, Void>() {
             @Override
-            protected List<MahasiswaSAMod> doInBackground() throws Exception {
-                return controller.getAllMahasiswa();
+            protected List<KSTRowSAMod> doInBackground() throws Exception {
+                return controller.getKSTMahasiswa(nim);
             }
+
             @Override
             protected void done() {
                 try {
-                    List<MahasiswaSAMod> rows = get();
-                    for (MahasiswaSAMod m : rows) {
-                        model.addRow(new Object[]{m.getNim(), m.getNama(), m.getIpk(), "Lihat"});
+                    List<KSTRowSAMod> rows = get();
+                    for (KSTRowSAMod r : rows) {
+                        model.addRow(new Object[]{
+                            r.getKodeKelas(),
+                            r.getKodeMatkul(),
+                            r.getNamaMatkul(),
+                            r.getNamaDosen(),
+                            r.getHari(),
+                            r.getJamRange(),
+                            r.getRuang(),
+                            "Lihat"
+                        });
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    JOptionPane.showMessageDialog(mahasiswaSA.this, "Gagal load: "+ex.getMessage());
+                    JOptionPane.showMessageDialog(KSTSA.this, "Gagal load KST: " + ex.getMessage());
                 }
             }
         }.execute();
@@ -99,9 +115,8 @@ public class mahasiswaSA extends javax.swing.JFrame {
                 try {
                     // convert view row -> model row just (buat kalau misal tablenya ada sorter)
                     int modelRow = jTable1.convertRowIndexToModel(row);
-                    String nim = jTable1.getModel().getValueAt(modelRow, 0).toString(); // kolom 0 = NIM
-                    //buka KST sebelum stop editting
-                    bukaKST(nim);
+                    String kodeKelas = jTable1.getModel().getValueAt(modelRow, 0).toString(); // kolom 0 = kode kelas
+                    bukaAbsensi(nim, kodeKelas);
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -126,9 +141,9 @@ public class mahasiswaSA extends javax.swing.JFrame {
         }
     }
 
-    private void bukaKST(String nim) {
-        controller.bukaKST(nim);
-        this.dispose();
+    private void bukaAbsensi(String nim, String kodeKelas) {
+        controller.bukaAbsensi(nim, kodeKelas);
+         this.dispose();
     }
 
     /**
@@ -257,7 +272,8 @@ public class mahasiswaSA extends javax.swing.JFrame {
     }//GEN-LAST:event_BTNdosenActionPerformed
 
     private void BTNmahasiswa1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNmahasiswa1ActionPerformed
-        
+        new mahasiswaSA().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_BTNmahasiswa1ActionPerformed
 
     private void BTNmatkul1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNmatkul1ActionPerformed
@@ -268,27 +284,27 @@ public class mahasiswaSA extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new mahasiswaSA().setVisible(true));
-    }
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+//            logger.log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(() -> new KSTSA().setVisible(true));
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Button BTNdosen;
