@@ -5,12 +5,15 @@
 package View;
 
 import Controller.KelasMatkulSAController;
+import Model.DosenDAO;
 import java.awt.Component;
 import javax.swing.*;
 import javax.swing.table.*;
 import Model.koneksi;
 import java.sql.Connection;
 import Model.KelasDAO;
+import Model.MatkulDAO;
+import Model.MatkulDosenDAO;
 
 /**
  *
@@ -29,7 +32,8 @@ public class pesertaKelasSA extends javax.swing.JFrame {
         initComponents();
         this.kodeKelas = kodeKelas;
         Connection conn = koneksi.getConnection();
-        this.controller = new KelasMatkulSAController(new KelasDAO(conn));
+        this.controller = new KelasMatkulSAController(new KelasDAO(conn), new MatkulDAO(conn), 
+                new DosenDAO(conn), new MatkulDosenDAO(conn));
         loadTablePesertaKelas();
         kodeDosenMatkul.setText("Kelas: " + kodeKelas);
     }

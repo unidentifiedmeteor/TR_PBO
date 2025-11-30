@@ -11,6 +11,10 @@ import Model.koneksi;
 import java.sql.Connection;
 import Model.KelasDAO;
 import Controller.KelasMatkulSAController;
+import Model.DosenDAO;
+import Model.MatkulDAO;
+import Model.MatkulDosenDAO;
+import java.util.List;
 
 /**
  *
@@ -29,23 +33,42 @@ public class kelasMatkulSA extends javax.swing.JFrame {
         initComponents();
         this.kodeMatkul = kodeMatkul;
         Connection conn = koneksi.getConnection();
-        this.controller = new KelasMatkulSAController(new KelasDAO(conn));
+        this.controller = new KelasMatkulSAController(new KelasDAO(conn),
+                new MatkulDAO(conn), new DosenDAO(conn), new MatkulDosenDAO(conn));
         labKodeMatkul.setText("Matkul: " + kodeMatkul);
+        //Buat form tambah kelas
+        cbHari.setModel(new DefaultComboBoxModel<>(
+                new String[]{"Senin", "Selasa", "Rabu", "Kamis", "Jumat"}
+        ));
+        loadComboDosen();
+
         loadTableKelas();
     }
 
+    private void loadComboDosen() {
+        cbDosen.removeAllItems();
+        List<String> dosenList = controller.getStringDosen();
+
+        for (String d : dosenList) {
+            cbDosen.addItem(d);
+        }
+    }
+
     private void loadTableKelas() {
-        DefaultTableModel model = new DefaultTableModel(new Object[]{"Kode Kelas", "Nama Kelas", "Kode Dosen", "Hari", "Mulai", "Selesai", "Ruangan", "Peserta"}, 0) {
+        DefaultTableModel model = new DefaultTableModel(new Object[]{"Kode Kelas", "Nama Kelas", "Kode Dosen", "Hari", "Mulai", "Selesai", "Ruangan", "Peserta", "Hapus"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 7;
+                return column == 7 || column == 8;
             }
         };
 
         jTable1.setModel(model);
 
         jTable1.getColumn("Peserta").setCellRenderer(new ButtonRenderer());
-        jTable1.getColumn("Peserta").setCellEditor(new ButtonEditor(new JCheckBox())); // editor uses a checkbox constructor pattern
+        jTable1.getColumn("Peserta").setCellEditor(new ButtonEditor(new JCheckBox(), 7)); // editor uses a checkbox constructor pattern
+
+        jTable1.getColumn("Hapus").setCellRenderer(new ButtonRenderer());
+        jTable1.getColumn("Hapus").setCellEditor(new ButtonEditor(new JCheckBox(), 8)); // editor uses a checkbox constructor pattern
 
         jTable1.getColumnModel().getColumn(0).setPreferredWidth(80);
         jTable1.getColumnModel().getColumn(1).setPreferredWidth(250);
@@ -55,6 +78,7 @@ public class kelasMatkulSA extends javax.swing.JFrame {
         jTable1.getColumnModel().getColumn(5).setPreferredWidth(80);
         jTable1.getColumnModel().getColumn(6).setPreferredWidth(80);
         jTable1.getColumnModel().getColumn(7).setPreferredWidth(80);
+        jTable1.getColumnModel().getColumn(8).setPreferredWidth(80);
 
         controller.loadKelasMatkul(model, kodeMatkul);
     }
@@ -79,9 +103,11 @@ public class kelasMatkulSA extends javax.swing.JFrame {
         private final JButton button = new JButton();
         private String label;
         private int row;
+        private int col;
 
-        public ButtonEditor(JCheckBox checkBox) {
+        public ButtonEditor(JCheckBox checkBox, int column) {
             super(checkBox);
+            this.col = column;
             button.setOpaque(true);
 
             button.addActionListener(e -> {
@@ -89,8 +115,16 @@ public class kelasMatkulSA extends javax.swing.JFrame {
                 try {
                     // convert view row -> model row just (buat kalau misal tablenya ada sorter)
                     int modelRow = jTable1.convertRowIndexToModel(row);
-                    String kodeKelas = jTable1.getModel().getValueAt(modelRow, 0).toString();
-                    bukaPesertaKelas(kodeKelas);
+
+                    if (col == 7) {
+                        String kodeKelas = jTable1.getModel().getValueAt(modelRow, 0).toString();
+                        new pesertaKelasSA(kodeKelas).setVisible(true);
+                        kelasMatkulSA.this.dispose();
+                    } else if (col == 8) {
+                        String kodeKelas = jTable1.getModel().getValueAt(modelRow, 0).toString();
+                        String kodeDosen = jTable1.getModel().getValueAt(modelRow, 2).toString();
+                        hapusKelas(kodeMatkul, kodeKelas, kodeDosen);
+                    }
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -115,9 +149,95 @@ public class kelasMatkulSA extends javax.swing.JFrame {
         }
     }
 
-    private void bukaPesertaKelas(String kodeKelas) {
-        new pesertaKelasSA(kodeKelas).setVisible(true);
-        this.dispose();
+    private void hapusKelas(String kodeMatkul, String kodeKelas, String kodeDosen) {
+        int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "Hapus kelas " + kodeKelas + " dari matkul ini?",
+                "Konfirmasi",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            controller.hapusKelas(kodeMatkul, kodeKelas, kodeDosen);
+            loadTableKelas();
+        }
+    }
+
+    private void simpanKelasBaru() {
+        try {
+            String kodeKelas = tKodeKelas.getText().trim();
+            String namaKelas = tNamaKelas.getText().trim();
+            String hari = (String) cbHari.getSelectedItem();
+            String mulai = tMulai.getText().trim();
+            String selesai = tSelesai.getText().trim();
+            String ruangan = tRuangan.getText().trim();
+
+            String selectedDosen = (String) cbDosen.getSelectedItem();
+            if (selectedDosen == null) {
+                JOptionPane.showMessageDialog(this,
+                        "Pilih dosen dulu.",
+                        "Validasi",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            String kodeDosen = selectedDosen.split(" - ")[0];
+
+            if (kodeKelas.isEmpty() || namaKelas.isEmpty() || ruangan.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "Kode kelas dan nama kelas, dan ruangan wajib diisi.",
+                        "Validasi",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (controller.isKodeKelasExist(kodeKelas)) {
+                JOptionPane.showMessageDialog(this,
+                        "Kode kelas sudah digunakan.",
+                        "WOYYYYY",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (!mulai.matches("^\\d{2}:\\d{2}$") || !selesai.matches("^\\d{2}:\\d{2}$")) {
+                JOptionPane.showMessageDialog(this,
+                        "Format jam harus HH:MM, contoh 09:30.",
+                        "Validasi",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            controller.tambahKelas(
+                    kodeMatkul,
+                    kodeKelas,
+                    namaKelas,
+                    kodeDosen,
+                    hari,
+                    mulai,
+                    selesai,
+                    ruangan
+            );
+
+            JOptionPane.showMessageDialog(this,
+                    "Kelas berhasil ditambahkan.",
+                    "Sukses",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+            tKodeKelas.setText("");
+            tNamaKelas.setText("");
+            tMulai.setText("");
+            tSelesai.setText("");
+            tRuangan.setText("");
+            cbHari.setSelectedIndex(0);
+
+            loadTableKelas();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                    "Gagal menyimpan kelas: " + ex.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**
@@ -137,6 +257,22 @@ public class kelasMatkulSA extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         labKodeMatkul = new javax.swing.JLabel();
+        btnTambahKelas = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        tKodeKelas = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        tNamaKelas = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        cbHari = new javax.swing.JComboBox<>();
+        jLabel5 = new javax.swing.JLabel();
+        tMulai = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        tSelesai = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        cbDosen = new javax.swing.JComboBox<>();
+        tRuangan = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -192,7 +328,7 @@ public class kelasMatkulSA extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(BTNhome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 71, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
                 .addComponent(BTNdosen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26)
                 .addComponent(BTNmahasiswa1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -219,6 +355,62 @@ public class kelasMatkulSA extends javax.swing.JFrame {
 
         labKodeMatkul.setText("jLabel1");
 
+        btnTambahKelas.setLabel("Tambah Kelas");
+        btnTambahKelas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTambahKelasActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Tambah Kelas");
+
+        jLabel2.setText("Kode Kelas");
+
+        tKodeKelas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tKodeKelasActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("Nama Kelas");
+
+        jLabel4.setText("Hari");
+
+        cbHari.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbHari.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbHariActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Jam Mulai");
+
+        tMulai.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tMulaiActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setText("Jam Selesai");
+
+        tSelesai.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tSelesaiActionPerformed(evt);
+            }
+        });
+
+        jLabel7.setText("Kode Dosen");
+
+        jLabel9.setText("Ruangan");
+
+        cbDosen.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        tRuangan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tRuanganActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -227,12 +419,51 @@ public class kelasMatkulSA extends javax.swing.JFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(262, 262, 262)
-                        .addComponent(labKodeMatkul))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 572, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(14, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(314, 314, 314)
+                                .addComponent(labKodeMatkul))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 641, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel2)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(tKodeKelas, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(53, 53, 53)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel5)
+                                            .addComponent(jLabel4)
+                                            .addComponent(jLabel6)))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(tNamaKelas, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(294, 294, 294)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(cbHari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(tMulai, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(tSelesai, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(48, 48, 48)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel7)
+                                            .addComponent(jLabel9))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(tRuangan, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(cbDosen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnTambahKelas)
+                        .addGap(280, 280, 280))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -241,8 +472,33 @@ public class kelasMatkulSA extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(labKodeMatkul)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addGap(3, 3, 3))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(6, 6, 6)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(tKodeKelas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(cbHari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7)
+                    .addComponent(cbDosen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(tNamaKelas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel5)
+                        .addComponent(tMulai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel9)
+                        .addComponent(tRuangan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tSelesai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnTambahKelas)
+                .addGap(15, 15, 15))
         );
 
         pack();
@@ -267,6 +523,30 @@ public class kelasMatkulSA extends javax.swing.JFrame {
         new matkulSA().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_BTNmatkul1ActionPerformed
+
+    private void tKodeKelasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tKodeKelasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tKodeKelasActionPerformed
+
+    private void cbHariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbHariActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbHariActionPerformed
+
+    private void tMulaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tMulaiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tMulaiActionPerformed
+
+    private void tSelesaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tSelesaiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tSelesaiActionPerformed
+
+    private void tRuanganActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tRuanganActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tRuanganActionPerformed
+
+    private void btnTambahKelasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahKelasActionPerformed
+        simpanKelasBaru();
+    }//GEN-LAST:event_btnTambahKelasActionPerformed
 
     /**
      * @param args the command line arguments
@@ -298,9 +578,25 @@ public class kelasMatkulSA extends javax.swing.JFrame {
     private java.awt.Button BTNhome;
     private java.awt.Button BTNmahasiswa1;
     private java.awt.Button BTNmatkul1;
+    private javax.swing.JButton btnTambahKelas;
+    private javax.swing.JComboBox<String> cbDosen;
+    private javax.swing.JComboBox<String> cbHari;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel labKodeMatkul;
+    private javax.swing.JTextField tKodeKelas;
+    private javax.swing.JTextField tMulai;
+    private javax.swing.JTextField tNamaKelas;
+    private javax.swing.JTextField tRuangan;
+    private javax.swing.JTextField tSelesai;
     // End of variables declaration//GEN-END:variables
 }

@@ -15,11 +15,13 @@ import java.util.List;
  * @author Lenovo
  */
 public class MatkulDosenDAO {
+
     private Connection conn;
 
     public MatkulDosenDAO(Connection conn) {
         this.conn = conn;
     }
+
     public List<String> getMatkulDosen(String kodeDosen) {
         List<String> matkulList = new ArrayList<>();
         String sql = "SELECT m.kode_matkul, m.nama_matkul "
@@ -42,4 +44,56 @@ public class MatkulDosenDAO {
 
         return matkulList;
     }
+
+    public boolean isRelasiExist(String kodeDosen, String kodeMatkul) {
+        String sql = "SELECT COUNT(*) FROM dosen_matkul WHERE kode_dosen = ? AND kode_matkul = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, kodeDosen);
+            ps.setString(2, kodeMatkul);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public void tambahRelasiDosenMatkul(String kodeDosen, String kodeMatkul) {
+        String sql = "INSERT INTO dosen_matkul (kode_dosen, kode_matkul) VALUES (?, ?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, kodeDosen);
+            ps.setString(2, kodeMatkul);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    
+    public void TambahRelasiDM(String kodeDosen, String kodeMatkul) {
+        if (!isRelasiExist(kodeDosen, kodeMatkul)) {
+            tambahRelasiDosenMatkul(kodeDosen, kodeMatkul);
+        }
+    }
+    public void hapusRelasiDosenMatkul(String kodeDosen, String kodeMatkul) {
+        String sql = "DELETE FROM dosen_matkul WHERE kode_dosen = ? AND kode_matkul = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, kodeDosen);
+            ps.setString(2, kodeMatkul);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    
+    public void HapusRelasiDM(String kodeDosen, String kodeMatkul) {
+        if (isRelasiExist(kodeDosen, kodeMatkul)) {
+            hapusRelasiDosenMatkul(kodeDosen, kodeMatkul);
+        }
+    }
+
 }

@@ -55,4 +55,22 @@ public class DosenDAO {
         return null;
     }
 
+    public List<String> getStringDosen() {
+        List<String> list = new ArrayList<>();
+        String sql = "SELECT kode_dosen, nama_dosen FROM dosen ORDER BY nama_dosen";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                String kode = rs.getString("kode_dosen");
+                String nama = rs.getString("nama_dosen");
+                list.add(kode + " - " + nama);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
 }

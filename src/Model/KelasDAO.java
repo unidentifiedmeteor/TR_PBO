@@ -38,9 +38,9 @@ public class KelasDAO {
                             rs.getString("hari"),
                             rs.getString("jadwal_mulai"),
                             rs.getString("jadwal_selesai"),
+                            rs.getString("ruangan"),
                             rs.getString("kode_dosen"),
-                            rs.getString("kode_matkul"),
-                            rs.getString("ruangan")
+                            rs.getString("kode_matkul")
                     ));
                 }
             }
@@ -119,4 +119,76 @@ public class KelasDAO {
             e.printStackTrace();
         }
     }
+
+    public int JumlahKelasDosenMatkul(String kodeDosen, String kodeMatkul) {
+        String sql = "SELECT COUNT(*) FROM kelas WHERE kode_dosen = ? AND kode_matkul = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, kodeDosen);
+            ps.setString(2, kodeMatkul);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public void hapusKelas(String kodeMatkul, String kodeKelas) {
+        String sql = "DELETE FROM kelas WHERE kode_matkul = ? AND kode_kelas = ?";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, kodeMatkul);
+            ps.setString(2, kodeKelas);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void tambahKelas(String kodeMatkul,
+            String kodeKelas,
+            String namaKelas,
+            String kodeDosen,
+            String hari,
+            String mulai,
+            String selesai,
+            String ruangan) {
+        String sql = "INSERT INTO kelas "
+                + "(kode_kelas, nama_kelas, kode_dosen, hari, jadwal_mulai, jadwal_selesai, ruangan, kode_matkul) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, kodeKelas);
+            ps.setString(2, namaKelas);
+            ps.setString(3, kodeDosen);
+            ps.setString(4, hari);
+            ps.setString(5, mulai);
+            ps.setString(6, selesai);
+            ps.setString(7, ruangan);
+            ps.setString(8, kodeMatkul);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Gagal menambah kelas", e);
+        }
+    }
+
+    public boolean isKodeKelasExist(String kodeKelas) {
+        String sql = "SELECT COUNT(*) FROM kelas WHERE kode_kelas = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, kodeKelas);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }
