@@ -232,4 +232,17 @@ public class KelasDAO {
         return false;
     }
 
+    public void hapusSemuaKelasDosenMatkul(String kodeDosen, String kodeMatkul) {
+        String sql = "DELETE FROM kelas WHERE kode_dosen = ? AND kode_matkul = ?";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, kodeDosen);
+            ps.setString(2, kodeMatkul);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Gagal menghapus kelas dosen-matkul", e);
+        }
+    }
+
 }
