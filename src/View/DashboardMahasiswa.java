@@ -4,12 +4,14 @@
  */
 package View;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author A C E R
  */
 public class DashboardMahasiswa extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DashboardMahasiswa.class.getName());
 
     /**
@@ -18,10 +20,11 @@ public class DashboardMahasiswa extends javax.swing.JFrame {
     public DashboardMahasiswa() {
         initComponents();
     }
-    
+
     public DashboardMahasiswa(String id) {
         initComponents();
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -58,6 +61,11 @@ public class DashboardMahasiswa extends javax.swing.JFrame {
         jButton2.setText("Log Out");
 
         jButton4.setText("Lihat Jadwal");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jButton5.setText("Cek Kelas");
 
@@ -164,6 +172,19 @@ public class DashboardMahasiswa extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+
+        String nim = Model.Session.getCurrentUserId();  // ambil langsung dari session
+
+        if (nim == null || nim.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Session kosong. Silakan login ulang.");
+            return;
+        }
+        new KSTMhs(nim).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments

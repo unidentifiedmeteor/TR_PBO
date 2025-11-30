@@ -26,7 +26,7 @@ public class MahasiswaSAController {
 
     public void bukaKST(String nim) {
         javax.swing.SwingUtilities.invokeLater(() -> {
-            View.KST kst = new View.KST(nim);
+            View.KSTSA kst = new View.KSTSA(nim);
             kst.setLocationRelativeTo(null);
             kst.setVisible(true);
         });

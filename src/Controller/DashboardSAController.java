@@ -5,10 +5,13 @@
 package Controller;
 
 import Model.DashboardSAMod;
+import Model.Session;
 import View.DashboardSA;
+import View.Login;
 import javax.swing.SwingWorker;
 import java.util.Map;
 import java.util.HashMap;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -24,9 +27,6 @@ public class DashboardSAController {
         this.view = view;
     }
 
-    /**
-     * Load counts asynchronously and update the view when done.
-     */
     public void loadCounts() {
         new SwingWorker<Map<String, Integer>, Void>() {
             @Override
@@ -53,7 +53,6 @@ public class DashboardSAController {
         }.execute();
     }
 
-    // Example: navigation could be delegated here instead of in the view
     public void openDosen() {
         new View.dosenSA().setVisible(true);
         view.dispose();
@@ -67,5 +66,21 @@ public class DashboardSAController {
     public void openMatkul() {
         new View.matkulSA().setVisible(true);
         view.dispose();
+    }
+
+    public void logout() {
+        int confirm = JOptionPane.showConfirmDialog(
+                view,
+                "Yakin mau logout?",
+                "Logout",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirm == JOptionPane.YES_OPTION) {
+             Session.clear();
+
+            new Login().setVisible(true);
+            view.dispose();
+        }
     }
 }
