@@ -31,6 +31,8 @@ public class DashboardMahasiswa extends javax.swing.JFrame {
 
     public DashboardMahasiswa(String id) {
         initComponents();
+        DashboardMhsController controller = new DashboardMhsController(this);
+        setController(controller);
     }
 
     /**

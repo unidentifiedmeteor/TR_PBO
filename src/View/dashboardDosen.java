@@ -25,6 +25,8 @@ public class dashboardDosen extends javax.swing.JFrame {
     dashboardDosen(String id) {
         initComponents();
         this.setLocationRelativeTo(null);
+        DashboardDosenController controller = new DashboardDosenController(this);
+        setController(controller);
     }
 
     private void loadDashboardData(String id) {
