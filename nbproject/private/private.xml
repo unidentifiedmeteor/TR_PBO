@@ -3,10 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Lenovo/Documents/NetBeansProjects/TR_PBO/src/View/DashboardMahasiswa.java</file>
+            <file>file:/C:/Users/Lenovo/Documents/NetBeansProjects/TR_PBO/src/View/dashboardDosen.java</file>
             <file>file:/C:/Users/Lenovo/Documents/NetBeansProjects/TR_PBO/src/View/DashboardSA.java</file>
-            <file>file:/C:/Users/Lenovo/Documents/NetBeansProjects/TR_PBO/src/View/kelasDosenSA.java</file>
-            <file>file:/C:/Users/Lenovo/Documents/NetBeansProjects/TR_PBO/src/Controller/MahasiswaController.java</file>
+            <file>file:/C:/Users/Lenovo/Documents/NetBeansProjects/TR_PBO/src/Controller/DashboardDosenController.java</file>
+            <file>file:/C:/Users/Lenovo/Documents/NetBeansProjects/TR_PBO/src/Controller/DashboardSAController.java</file>
         </group>
     </open-files>
 </project-private>

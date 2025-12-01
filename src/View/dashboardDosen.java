@@ -1,30 +1,40 @@
 package View;
 
-import Controller.DosenController; 
-import Model.Dosen;             // Asumsi: Model/Entity Class Dosen
+import Controller.DosenController;
+import Controller.DashboardDosenController;
+import Model.Dosen;
 import java.util.logging.Level;
 import javax.swing.JOptionPane;
+
 public class dashboardDosen extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(dashboardDosen.class.getName());
     private String idDosen;
+    private Controller.DashboardDosenController controller;
+
+    public void setController(Controller.DashboardDosenController controller) {
+        this.controller = controller;
+    }
+
     public dashboardDosen() {
         initComponents();
+        DashboardDosenController controller = new DashboardDosenController(this);
+        setController(controller);
     }
 
     dashboardDosen(String id) {
-       initComponents();
-       this.setLocationRelativeTo(null);
+        initComponents();
+        this.setLocationRelativeTo(null);
     }
 
-        private void loadDashboardData(String id) {
+    private void loadDashboardData(String id) {
         if (id != null && !id.isEmpty()) {
             try {
                 DosenController controller = new DosenController();
                 Dosen dosen = controller.getDosenById(id);
-                
+
                 if (dosen != null) {
-                    jLabel1.setText("Dashboard Dosen - Selamat Datang, " + dosen.getNama()); 
+                    jLabel1.setText("Dashboard Dosen - Selamat Datang, " + dosen.getNama());
                     logger.log(Level.INFO, "Dosen {0} berhasil memuat dashboard.", dosen.getNama());
                 } else {
                     JOptionPane.showMessageDialog(this, "Data dosen tidak ditemukan.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -35,6 +45,7 @@ public class dashboardDosen extends javax.swing.JFrame {
             }
         }
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -68,6 +79,11 @@ public class dashboardDosen extends javax.swing.JFrame {
         });
 
         btnLogout.setText("Log Out");
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogoutActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -159,14 +175,18 @@ public class dashboardDosen extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
-       try {
+        try {
             Cekkelas cekKelas = new Cekkelas(this.idDosen);
         } catch (Exception ex) {
             logger.log(Level.SEVERE, "Gagal membuka form Cek Kelas.", ex);
             JOptionPane.showMessageDialog(this, "Gagal membuka Cek Kelas: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-    
+
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+        this.controller.logout();
+    }//GEN-LAST:event_btnLogoutActionPerformed
 
     /**
      * @param args the command line arguments
