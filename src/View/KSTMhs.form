@@ -51,19 +51,8 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="BTNmahasiswa1" alignment="0" pref="75" max="32767" attributes="0"/>
-                      <Component id="BTNhome" alignment="0" max="32767" attributes="0"/>
-                      <Component id="BTNdosen" alignment="0" max="32767" attributes="0"/>
-                  </Group>
+                  <Component id="BTNhome" pref="75" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-              </Group>
-              <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="BTNmatkul1" pref="75" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                  </Group>
               </Group>
           </Group>
         </DimensionLayout>
@@ -72,18 +61,7 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="BTNhome" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="71" max="32767" attributes="0"/>
-                  <Component id="BTNdosen" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                  <Component id="BTNmahasiswa1" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="121" max="-2" attributes="0"/>
-              </Group>
-              <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
-                      <Component id="BTNmatkul1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="219" max="32767" attributes="0"/>
-                  </Group>
+                  <EmptySpace pref="266" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -95,30 +73,6 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BTNhomeActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="java.awt.Button" name="BTNdosen">
-          <Properties>
-            <Property name="label" type="java.lang.String" value="Dosen"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BTNdosenActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="java.awt.Button" name="BTNmahasiswa1">
-          <Properties>
-            <Property name="label" type="java.lang.String" value="Mahasiswa"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BTNmahasiswa1ActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="java.awt.Button" name="BTNmatkul1">
-          <Properties>
-            <Property name="label" type="java.lang.String" value="Matkul"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BTNmatkul1ActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
