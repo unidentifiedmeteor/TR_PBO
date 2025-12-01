@@ -103,11 +103,17 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Ambil Kelas"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAmbilKelasActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="jjj">
           <Properties>
             <Property name="text" type="java.lang.String" value="Cek Kelas"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jjjActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="jButton4">
           <Properties>
@@ -162,13 +168,16 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Cek Absen"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BtnCekAbsenActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Arial" size="18" style="1"/>
+          <Font name="Arial" size="24" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="ALGORITMA DAN STRUKTUR DATA - TC512A"/>
+        <Property name="text" type="java.lang.String" value="DETAIL KELAS"/>
       </Properties>
     </Component>
   </SubComponents>

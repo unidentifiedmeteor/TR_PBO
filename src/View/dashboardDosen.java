@@ -72,6 +72,11 @@ public class dashboardDosen extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(248, 214, 19));
 
         btnAmbilKelas.setText("Ambil Kelas");
+        btnAmbilKelas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAmbilKelasActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Cek Kelas");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -176,7 +181,8 @@ public class dashboardDosen extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-
+        new kelasDosen().setVisible(true);
+        this.dispose();
         try {
             Cekkelas cekKelas = new Cekkelas(this.idDosen);
         } catch (Exception ex) {
@@ -189,6 +195,11 @@ public class dashboardDosen extends javax.swing.JFrame {
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         this.controller.logout();
     }//GEN-LAST:event_btnLogoutActionPerformed
+
+    private void btnAmbilKelasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAmbilKelasActionPerformed
+        new ambilDosen().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnAmbilKelasActionPerformed
 
     /**
      * @param args the command line arguments

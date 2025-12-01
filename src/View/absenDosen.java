@@ -43,8 +43,18 @@ public class absenDosen extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(248, 214, 19));
 
         btnAmbilKelas.setText("Ambil Kelas");
+        btnAmbilKelas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAmbilKelasActionPerformed(evt);
+            }
+        });
 
         jjj.setText("Cek Kelas");
+        jjj.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jjjActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Back");
 
@@ -94,9 +104,14 @@ public class absenDosen extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
 
         BtnCekAbsen.setText("Cek Absen");
+        BtnCekAbsen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnCekAbsenActionPerformed(evt);
+            }
+        });
 
-        jLabel1.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        jLabel1.setText("ALGORITMA DAN STRUKTUR DATA - TC512A");
+        jLabel1.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
+        jLabel1.setText("DETAIL KELAS");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -131,6 +146,20 @@ public class absenDosen extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void BtnCekAbsenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCekAbsenActionPerformed
+       
+    }//GEN-LAST:event_BtnCekAbsenActionPerformed
+
+    private void btnAmbilKelasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAmbilKelasActionPerformed
+        new ambilDosen().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnAmbilKelasActionPerformed
+
+    private void jjjActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jjjActionPerformed
+        new kelasDosen().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jjjActionPerformed
 
     /**
      * @param args the command line arguments
