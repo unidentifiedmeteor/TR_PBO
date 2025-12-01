@@ -5,6 +5,7 @@
 package Controller;
 
 import Model.AbsensiMhsDAO;
+import Model.AbsensiSAMod;
 import Model.KSTDAO;
 import Model.KSTRowSAMod;
 import java.io.File;
@@ -45,4 +46,13 @@ public class KSTMhsController {
         String path = fileSurat.getAbsolutePath();
         absensiDao.simpanAbsen(nim, idPert, "IZIN", path);
     }
+
+    public AbsensiSAMod getInfoPertemuanHariIni(String kodeKelas) throws Exception {
+        AbsensiSAMod info = absensiDao.getInfoPertemuanHariIni(kodeKelas);
+        if (info == null) {
+            throw new Exception("Belum ada pertemuan untuk kelas ini hari ini.");
+        }
+        return info;
+    }
+
 }

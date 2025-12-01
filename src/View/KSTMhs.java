@@ -14,6 +14,7 @@ import Model.MahasiswaDAO;
 import java.util.List;
 import javax.swing.SwingWorker;
 import Controller.KSTSAController;
+import Model.AbsensiSAMod;
 import Model.KSTRowSAMod;
 import Model.KSTDAO;
 
@@ -120,6 +121,22 @@ public class KSTMhs extends javax.swing.JFrame {
                     int modelRow = jTable1.convertRowIndexToModel(row);
                     String kodeKelas = jTable1.getModel().getValueAt(modelRow, 0).toString();
 
+                    AbsensiSAMod info = controller.getInfoPertemuanHariIni(kodeKelas);
+
+                    int konfirmasi = JOptionPane.showConfirmDialog(
+                            KSTMhs.this,
+                            "Hari ini untuk kelas " + kodeKelas
+                            + "\nPertemuan ke : " + info.getPertemuanKe()
+                            + "\nTanggal      : " + info.getTanggal()
+                            + "\nLanjut presensi?",
+                            "Konfirmasi Pertemuan",
+                            JOptionPane.YES_NO_OPTION
+                    );
+
+                    if (konfirmasi != JOptionPane.YES_OPTION) {
+                        fireEditingStopped();
+                        return;
+                    }
                     String[] options = {"Presensi HADIR", "Upload Surat Ijin", "Batal"};
                     int pilih = JOptionPane.showOptionDialog(
                             KSTMhs.this,
@@ -133,7 +150,6 @@ public class KSTMhs extends javax.swing.JFrame {
                     );
 
                     if (pilih == 0) {
-                        // PRESENSI HADIR
                         controller.presensiHadir(nim, kodeKelas);
                         jTable1.getModel().setValueAt("HADIR", modelRow, 7);
                         JOptionPane.showMessageDialog(KSTMhs.this,

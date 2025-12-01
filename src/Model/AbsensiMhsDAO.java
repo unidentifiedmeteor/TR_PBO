@@ -98,4 +98,29 @@ public class AbsensiMhsDAO {
             ps.executeUpdate();
         }
     }
+
+    public AbsensiSAMod getInfoPertemuanHariIni(String kodeKelas) {
+        String sql = "SELECT pertemuan_ke, tanggal "
+                + "FROM pertemuan "
+                + "WHERE kode_kelas = ? AND tanggal = CURDATE() "
+                + "LIMIT 1";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, kodeKelas);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new AbsensiSAMod(
+                            rs.getInt("pertemuan_ke"),
+                            rs.getString("tanggal"),
+                            null,
+                            null
+                    );
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return null;
+    }
 }
