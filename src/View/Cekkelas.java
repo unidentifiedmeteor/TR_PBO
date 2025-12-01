@@ -9,5 +9,8 @@ package View;
  * @author ASUS
  */
 class Cekkelas {
+
+    Cekkelas(String kodeDosen) {
+    }
     
 }

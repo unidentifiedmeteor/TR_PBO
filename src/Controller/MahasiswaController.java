@@ -36,28 +36,4 @@ public class MahasiswaController {
         return AbsenDAO.absenIzin(idPertemuan, nim, filePath);
     }
 
-    
-
-    private final DashboardMahasiswa view;
-
-    public DashboardMahasiswaController(DashboardSAMod model, DashboardSA view) {
-        this.model = model;
-        this.view = view;
-    }
-        public void logout() {
-        int confirm = JOptionPane.showConfirmDialog(
-                view,
-                "Yakin mau logout?",
-                "Logout",
-                JOptionPane.YES_NO_OPTION
-        );
-
-        if (confirm == JOptionPane.YES_OPTION) {
-             Session.clear();
-
-            new Login().setVisible(true);
-            view.dispose();
-        }
-    }
-
 }
