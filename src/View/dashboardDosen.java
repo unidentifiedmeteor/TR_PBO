@@ -1,26 +1,51 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package View;
 
-/**
- *
- * @author Lenovo
- */
-public class dashboardDosen extends javax.swing.JFrame {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(dashboardDosen.class.getName());
+import Controller.DosenController;
+import Controller.DashboardDosenController;
+import Model.Dosen;
+import java.util.logging.Level;
+import javax.swing.JOptionPane;
 
-    /**
-     * Creates new form dashboardDosen
-     */
+public class dashboardDosen extends javax.swing.JFrame {
+
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(dashboardDosen.class.getName());
+    private String idDosen;
+    private Controller.DashboardDosenController controller;
+
+    public void setController(Controller.DashboardDosenController controller) {
+        this.controller = controller;
+    }
+
     public dashboardDosen() {
         initComponents();
+        DashboardDosenController controller = new DashboardDosenController(this);
+        setController(controller);
     }
 
     dashboardDosen(String id) {
-       initComponents();
+        initComponents();
+        this.setLocationRelativeTo(null);
+        DashboardDosenController controller = new DashboardDosenController(this);
+        setController(controller);
+    }
+
+    private void loadDashboardData(String id) {
+        if (id != null && !id.isEmpty()) {
+            try {
+                DosenController controller = new DosenController();
+                Dosen dosen = controller.getDosenById(id);
+
+                if (dosen != null) {
+                    jLabel1.setText("Dashboard Dosen - Selamat Datang, " + dosen.getNama());
+                    logger.log(Level.INFO, "Dosen {0} berhasil memuat dashboard.", dosen.getNama());
+                } else {
+                    JOptionPane.showMessageDialog(this, "Data dosen tidak ditemukan.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception ex) {
+                logger.log(Level.SEVERE, "Gagal memuat data dosen dari database.", ex);
+                JOptionPane.showMessageDialog(this, "Error koneksi database.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
     /**
@@ -33,9 +58,9 @@ public class dashboardDosen extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        btnAmbilKelas = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btnLogout = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         label1 = new java.awt.Label();
         jLabel1 = new javax.swing.JLabel();
@@ -46,11 +71,21 @@ public class dashboardDosen extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(248, 214, 19));
 
-        jButton1.setText("Ambil Kelas");
+        btnAmbilKelas.setText("Ambil Kelas");
 
         jButton2.setText("Cek Kelas");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
-        jButton4.setText("Log Out");
+        btnLogout.setText("Log Out");
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogoutActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -59,20 +94,20 @@ public class dashboardDosen extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnAmbilKelas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnLogout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(76, 76, 76)
-                .addComponent(jButton1)
+                .addComponent(btnAmbilKelas)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 252, Short.MAX_VALUE)
-                .addComponent(jButton4)
+                .addComponent(btnLogout)
                 .addGap(14, 14, 14))
         );
 
@@ -140,6 +175,21 @@ public class dashboardDosen extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+
+        try {
+            Cekkelas cekKelas = new Cekkelas(this.idDosen);
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, "Gagal membuka form Cek Kelas.", ex);
+            JOptionPane.showMessageDialog(this, "Gagal membuka Cek Kelas: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+        this.controller.logout();
+    }//GEN-LAST:event_btnLogoutActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -166,13 +216,19 @@ public class dashboardDosen extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnAmbilKelas;
+    private javax.swing.JButton btnLogout;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private java.awt.Label label1;
     // End of variables declaration//GEN-END:variables
+
+    private static class CekKelas {
+
+        public CekKelas() {
+        }
+    }
 }

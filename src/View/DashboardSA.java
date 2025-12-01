@@ -31,6 +31,10 @@ public class DashboardSA extends javax.swing.JFrame {
     public void setMatkulCount(int count) {
         label5.setText(String.valueOf(count));
     }
+    
+    public void setKelasCount(int count) {
+        jmlKelas.setText(String.valueOf(count));
+    }
 
     public void showError(String message) {
         javax.swing.JOptionPane.showMessageDialog(this, message, "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
@@ -75,6 +79,9 @@ public class DashboardSA extends javax.swing.JFrame {
         JMLmahasiswa2 = new javax.swing.JPanel();
         label5 = new java.awt.Label();
         label6 = new java.awt.Label();
+        JMLmahasiswa3 = new javax.swing.JPanel();
+        label7 = new java.awt.Label();
+        jmlKelas = new java.awt.Label();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -245,6 +252,37 @@ public class DashboardSA extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        JMLmahasiswa3.setBackground(new java.awt.Color(2, 72, 193));
+        JMLmahasiswa3.setPreferredSize(new java.awt.Dimension(118, 80));
+
+        label7.setForeground(new java.awt.Color(255, 255, 255));
+        label7.setText("Kelas");
+
+        jmlKelas.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        jmlKelas.setForeground(new java.awt.Color(255, 255, 255));
+        jmlKelas.setText("233");
+
+        javax.swing.GroupLayout JMLmahasiswa3Layout = new javax.swing.GroupLayout(JMLmahasiswa3);
+        JMLmahasiswa3.setLayout(JMLmahasiswa3Layout);
+        JMLmahasiswa3Layout.setHorizontalGroup(
+            JMLmahasiswa3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JMLmahasiswa3Layout.createSequentialGroup()
+                .addContainerGap(44, Short.MAX_VALUE)
+                .addGroup(JMLmahasiswa3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(label7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jmlKelas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(40, 40, 40))
+        );
+        JMLmahasiswa3Layout.setVerticalGroup(
+            JMLmahasiswa3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(JMLmahasiswa3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(label7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(jmlKelas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -256,7 +294,9 @@ public class DashboardSA extends javax.swing.JFrame {
                     .addComponent(JMLmahasiswa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(JMLmahasiswa2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(JMLmahasiswa1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(JMLmahasiswa1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(JMLmahasiswa3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 117, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -268,8 +308,13 @@ public class DashboardSA extends javax.swing.JFrame {
                     .addComponent(JMLmahasiswa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(JMLmahasiswa1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(JMLmahasiswa2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(97, 97, 97))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(JMLmahasiswa2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(97, 97, 97))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(JMLmahasiswa3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         pack();
@@ -339,12 +384,15 @@ public class DashboardSA extends javax.swing.JFrame {
     private javax.swing.JPanel JMLmahasiswa;
     private javax.swing.JPanel JMLmahasiswa1;
     private javax.swing.JPanel JMLmahasiswa2;
+    private javax.swing.JPanel JMLmahasiswa3;
     private javax.swing.JPanel jPanel2;
+    private java.awt.Label jmlKelas;
     private java.awt.Label label1;
     private java.awt.Label label2;
     private java.awt.Label label3;
     private java.awt.Label label4;
     private java.awt.Label label5;
     private java.awt.Label label6;
+    private java.awt.Label label7;
     // End of variables declaration//GEN-END:variables
 }

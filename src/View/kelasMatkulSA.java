@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package View;
 
 import java.awt.Component;
@@ -14,6 +10,7 @@ import Controller.KelasMatkulSAController;
 import Model.DosenDAO;
 import Model.MatkulDAO;
 import Model.MatkulDosenDAO;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
