@@ -39,7 +39,7 @@ public class kelasMatkulSA extends javax.swing.JFrame {
         cbHari.setModel(new DefaultComboBoxModel<>(
                 new String[]{"Senin", "Selasa", "Rabu", "Kamis", "Jumat"}
         ));
-//        loadComboDosen();
+        loadComboDosen();
         loadTableKelas();
 
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -52,7 +52,7 @@ public class kelasMatkulSA extends javax.swing.JFrame {
         });
     }
 
-    private void loadComboDosen() throws SQLException {
+    private void loadComboDosen() {
         cbDosen.removeAllItems();
         List<String> dosenList = controller.getStringDosen();
 
