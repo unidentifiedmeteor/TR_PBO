@@ -1,13 +1,11 @@
 package Model;
 
-// ... import java.sql dan Model.KelasModel
-
-import java.sql.Connection; // 👈 Gunakan Connection dari java.sql
+import java.sql.Connection; 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
-import java.time.LocalTime; // Jika KelasModel menggunakan LocalTime
+import java.time.LocalTime; 
 import java.util.ArrayList;
 import java.util.List;
 import Model.KelasModel;
