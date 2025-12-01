@@ -22,6 +22,10 @@ public class KelasModel {
         this.kodeDosen = kodeDosen;
     }
     
+    public KelasModel(String kodeKelas, String namaKelas) {
+        this.kodeKelas = kodeKelas;
+        this.namaKelas = namaKelas;
+    }
     // Getters
     public String getKodeKelas() { return kodeKelas; }
     public String getNamaKelas() { return namaKelas; }
