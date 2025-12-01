@@ -42,6 +42,35 @@ public class KelasDAO {
 
         return list;
     }
+    
+    public List<KelasSAMod> getKelas() {
+        List<KelasSAMod> list = new ArrayList<>();
+
+        String sql = "SELECT kode_kelas, nama_kelas, hari, jadwal_mulai, jadwal_selesai, "
+                + "       kode_dosen, kode_matkul, ruangan "
+                + "FROM kelas ";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new KelasSAMod(
+                            rs.getString("kode_kelas"),
+                            rs.getString("nama_kelas"),
+                            rs.getString("hari"),
+                            rs.getString("jadwal_mulai"),
+                            rs.getString("jadwal_selesai"),
+                            rs.getString("ruangan"),
+                            rs.getString("kode_dosen"),
+                            rs.getString("kode_matkul")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
 
     public List<KelasSAMod> getKelasDosen(String kodeDosen) {
         List<KelasSAMod> list = new ArrayList<>();
