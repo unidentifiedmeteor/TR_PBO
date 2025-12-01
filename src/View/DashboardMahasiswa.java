@@ -4,6 +4,7 @@
  */
 package View;
 
+import Controller.DashboardMhsController;
 import javax.swing.JOptionPane;
 
 /**
@@ -13,12 +14,19 @@ import javax.swing.JOptionPane;
 public class DashboardMahasiswa extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DashboardMahasiswa.class.getName());
+    private Controller.DashboardMhsController controller;
+
+    public void setController(Controller.DashboardMhsController controller) {
+        this.controller = controller;
+    }
 
     /**
      * Creates new form DasboardMahasiswa
      */
     public DashboardMahasiswa() {
         initComponents();
+        DashboardMhsController controller = new DashboardMhsController(this);
+        setController(controller);
     }
 
     public DashboardMahasiswa(String id) {
@@ -36,7 +44,7 @@ public class DashboardMahasiswa extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        BTNlogout = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
@@ -58,7 +66,12 @@ public class DashboardMahasiswa extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Log Out");
+        BTNlogout.setText("Log Out");
+        BTNlogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTNlogoutActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Lihat Jadwal");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -77,7 +90,7 @@ public class DashboardMahasiswa extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(BTNlogout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -92,7 +105,7 @@ public class DashboardMahasiswa extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 217, Short.MAX_VALUE)
-                .addComponent(jButton2)
+                .addComponent(BTNlogout)
                 .addGap(14, 14, 14))
         );
 
@@ -186,6 +199,10 @@ public class DashboardMahasiswa extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    private void BTNlogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNlogoutActionPerformed
+        this.controller.logout();
+    }//GEN-LAST:event_BTNlogoutActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -212,8 +229,8 @@ public class DashboardMahasiswa extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BTNlogout;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;

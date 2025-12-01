@@ -1,6 +1,7 @@
 package Model;
 
 public class AbsenMhs {
+
     private int id;
     private int idPertemuan;
     private String nim;
@@ -15,9 +16,23 @@ public class AbsenMhs {
         this.suratIjin = suratIjin;
     }
 
-    public int getId() { return id; }
-    public int getIdPertemuan() { return idPertemuan; }
-    public String getNim() { return nim; }
-    public String getStatus() { return status; }
-    public String getSuratIjin() { return suratIjin; }
+    public int getId() {
+        return id;
+    }
+
+    public int getIdPertemuan() {
+        return idPertemuan;
+    }
+
+    public String getNim() {
+        return nim;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getSuratIjin() {
+        return suratIjin;
+    }
 }

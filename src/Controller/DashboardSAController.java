@@ -35,6 +35,7 @@ public class DashboardSAController {
                 counts.put("mahasiswa", model.getRowCount("mahasiswa"));
                 counts.put("dosen", model.getRowCount("dosen"));
                 counts.put("matkul", model.getRowCount("matkul"));
+                counts.put("kelas", model.getRowCount("kelas"));
                 return counts;
             }
 
@@ -45,6 +46,7 @@ public class DashboardSAController {
                     view.setMahasiswaCount(counts.get("mahasiswa"));
                     view.setDosenCount(counts.get("dosen"));
                     view.setMatkulCount(counts.get("matkul"));
+                    view.setKelasCount(counts.get("kelas"));
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     view.showError("Gagal memuat data: " + ex.getMessage());
