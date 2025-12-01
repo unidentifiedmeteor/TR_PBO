@@ -54,7 +54,7 @@ public class dosenSA extends javax.swing.JFrame {
         jTable1.getColumnModel().getColumn(2).setPreferredWidth(80);
         jTable1.getColumnModel().getColumn(3).setPreferredWidth(80);
 
-//        controller.loadDosen(model);
+        controller.loadDosen(model);
     }
 
     private static class ButtonRenderer extends JButton implements TableCellRenderer {
