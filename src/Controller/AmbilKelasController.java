@@ -1,14 +1,18 @@
 
+import Model.Dosen;
+import Model.DosenSAMod;
 import Model.KelasDosenDAO;
 import Model.KelasModel;
 import View.ambilDosen;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
-public class AmbilKelasController {
+public final class AmbilKelasController {
     private KelasDosenDAO kelasDAO;
-    private ambilDosen view; // Asumsi nama JFrame Anda
+    private ambilDosen view;
     private String kodeDosenAktif;
+    private Object dao;
 
     public AmbilKelasController(ambilDosen view, KelasDosenDAO kelasDAO, String kodeDosenAktif) {
         this.view = view;
@@ -24,6 +28,24 @@ public class AmbilKelasController {
         List<KelasModel> list = kelasDAO.getAllKelasAvailable(kodeDosenAktif);
         // Di sini Anda perlu mempassing 'list' ke Custom Table Model Anda di 'view'
         view.updateKelasTable(list); // Asumsi Anda punya method updateKelasTable di AmbilDosenFrame
+    }
+    
+    public void loadDosen(DefaultTableModel model) {
+        model.setRowCount(0);
+        
+        List<KelasModel> list = dao.getKelas();
+        for (KelasModel m : list) {
+            model.addRow(new Object[]{
+                m.getKodeKelas(),
+                m.getNamaKelas(),
+                m.getKodeMatkul(),
+                m.getHari(),
+                m.getJadwalMulai(),
+                m.getJadwalSelesai(),
+                m.getRuangan(),
+                m.getKodeDosen()
+            });
+        }
     }
 
     private void handleAmbilKelas() {
