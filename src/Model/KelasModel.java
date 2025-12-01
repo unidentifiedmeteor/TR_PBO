@@ -5,16 +5,18 @@ import java.time.LocalTime; // Pastikan Anda menggunakan Java 8+
 public class KelasModel {
     private String kodeKelas;
     private String namaKelas;
+    private String kodeMatkul; // <-- PROPERTI BARU
     private String hari;
     private LocalTime jadwalMulai;
-    private LocalTime jadwalSelesai; // Tambahkan ini agar lengkap
+    private LocalTime jadwalSelesai; 
     private String ruangan;
-    private String kodeDosen; // Siapa yang mengampu
+    private String kodeDosen; 
 
-    // Constructor (Sesuaikan dengan data yang akan diambil dari DB)
-    public KelasModel(String kodeKelas, String namaKelas, String hari, LocalTime jadwalMulai, LocalTime jadwalSelesai, String ruangan, String kodeDosen) {
+    // Constructor LENGKAP (8 parameter)
+    public KelasModel(String kodeKelas, String namaKelas, String kodeMatkul, String hari, LocalTime jadwalMulai, LocalTime jadwalSelesai, String ruangan, String kodeDosen) {
         this.kodeKelas = kodeKelas;
         this.namaKelas = namaKelas;
+        this.kodeMatkul = kodeMatkul; // <-- Tambahkan ini
         this.hari = hari;
         this.jadwalMulai = jadwalMulai;
         this.jadwalSelesai = jadwalSelesai;
@@ -22,13 +24,20 @@ public class KelasModel {
         this.kodeDosen = kodeDosen;
     }
     
+    // Constructor 2 parameter (untuk View: getSelectedKelas) tetap sama
     public KelasModel(String kodeKelas, String namaKelas) {
         this.kodeKelas = kodeKelas;
         this.namaKelas = namaKelas;
     }
+
+    public KelasModel() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
     // Getters
     public String getKodeKelas() { return kodeKelas; }
     public String getNamaKelas() { return namaKelas; }
+    public String getKodeMatkul() { return kodeMatkul; } // <-- Getter Baru
     public String getHari() { return hari; }
     public LocalTime getJadwalMulai() { return jadwalMulai; }
     public LocalTime getJadwalSelesai() { return jadwalSelesai; }
@@ -37,15 +46,18 @@ public class KelasModel {
     
     // Utility method untuk JTable
     public Object[] toObjectArray() {
-        // [No, Kode Matakuliah (di tabel kelas adalah kode_matkul), Matakuliah, Hari, Jam, Ruang]
-        // Catatan: Anda perlu JOIN ke tabel 'matkul' atau mengambil kode_matkul dari tabel 'kelas'
+        // Kolom di JTable yang Anda inginkan: [No, Kode, Matakuliah, Hari, Jam, Ruang]
         return new Object[]{
-            null, // Nomor akan diisi di View/TableModel
-            kodeKelas,
-            namaKelas,
+            null, 
+            kodeMatkul, // <-- Menggunakan Kode Mata Kuliah (TC212), bukan Kode Kelas (TC212A)
+            namaKelas,  // Ini adalah nama_kelas (misalnya PBO A)
             hari,
             jadwalMulai + " - " + jadwalSelesai,
             ruangan
         };
+    }
+
+    public Object getNamaDosen() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

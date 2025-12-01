@@ -3,14 +3,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Model;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  *
  * @author Lenovo
  */
 public class AbsensiMhsDAO {
+
     private final Connection conn;
 
     public AbsensiMhsDAO() {
@@ -24,11 +27,12 @@ public class AbsensiMhsDAO {
     public List<AbsensiSAMod> getAbsensiMahasiswaKelas(String nim, String kodeKelas) {
         List<AbsensiSAMod> list = new ArrayList<>();
 
-        String sql = "SELECT p.pertemuan_ke, p.tanggal, a.status, a.surat_ijin " +
-                     "FROM absen a " +
-                     "JOIN pertemuan p ON a.id_pertemuan = p.id_pertemuan " +
-                     "WHERE a.nim = ? AND p.kode_kelas = ? " +
-                     "ORDER BY p.pertemuan_ke";
+        String sql = "SELECT p.pertemuan_ke, p.tanggal, a.status, a.surat_ijin "
+                + "FROM pertemuan p "
+                + "LEFT JOIN absen a ON a.id_pertemuan = p.id_pertemuan "
+                + "  AND a.NIM = ? "
+                + "WHERE p.kode_kelas = ? "
+                + "ORDER BY p.pertemuan_ke";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, nim);
@@ -39,7 +43,8 @@ public class AbsensiMhsDAO {
                     AbsensiSAMod row = new AbsensiSAMod(
                             rs.getInt("pertemuan_ke"),
                             rs.getString("tanggal"),
-                            rs.getString("status")
+                            rs.getString("status"),
+                            rs.getString("surat_ijin")
                     );
                     list.add(row);
                 }
@@ -50,5 +55,72 @@ public class AbsensiMhsDAO {
         }
 
         return list;
+    }
+
+    public Integer getPertemuanHariIni(String kodeKelas) {
+        String sql = "SELECT id_pertemuan "
+                + "FROM pertemuan "
+                + "WHERE kode_kelas = ? AND tanggal = CURDATE() "
+                + "LIMIT 1";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, kodeKelas);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("id_pertemuan");
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public void simpanAbsen(String nim,
+            int idPertemuan,
+            String status,
+            String suratIjinPath) throws SQLException {
+
+        String sql = "INSERT INTO absen (id_pertemuan, NIM, status, surat_ijin) "
+                + "VALUES (?, ?, ?, ?) "
+                + "ON DUPLICATE KEY UPDATE "
+                + "  status = VALUES(status), "
+                + "  waktu_absen = CURRENT_TIMESTAMP, "
+                + "  surat_ijin = VALUES(surat_ijin)";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idPertemuan);
+            ps.setString(2, nim);
+            ps.setString(3, status);
+            ps.setString(4, suratIjinPath);
+            ps.executeUpdate();
+        }
+    }
+
+    public AbsensiSAMod getInfoPertemuanHariIni(String kodeKelas) {
+        String sql = "SELECT pertemuan_ke, tanggal "
+                + "FROM pertemuan "
+                + "WHERE kode_kelas = ? AND tanggal = CURDATE() "
+                + "LIMIT 1";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, kodeKelas);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new AbsensiSAMod(
+                            rs.getInt("pertemuan_ke"),
+                            rs.getString("tanggal"),
+                            null,
+                            null
+                    );
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return null;
     }
 }

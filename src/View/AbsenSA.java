@@ -61,7 +61,8 @@ public class absenSA extends javax.swing.JFrame {
                         model.addRow(new Object[]{
                             r.getPertemuanKe(),
                             r.getTanggal(),
-                            r.getStatus()
+                            r.getStatus(),
+                            r.getSuratIjin()
                         });
                     }
                 } catch (Exception ex) {
