@@ -3,14 +3,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Model;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  *
  * @author Lenovo
  */
 public class AbsensiMhsDAO {
+
     private final Connection conn;
 
     public AbsensiMhsDAO() {
@@ -24,11 +27,12 @@ public class AbsensiMhsDAO {
     public List<AbsensiSAMod> getAbsensiMahasiswaKelas(String nim, String kodeKelas) {
         List<AbsensiSAMod> list = new ArrayList<>();
 
-        String sql = "SELECT p.pertemuan_ke, p.tanggal, a.status, a.surat_ijin " +
-                     "FROM absen a " +
-                     "JOIN pertemuan p ON a.id_pertemuan = p.id_pertemuan " +
-                     "WHERE a.nim = ? AND p.kode_kelas = ? " +
-                     "ORDER BY p.pertemuan_ke";
+        String sql = "SELECT p.pertemuan_ke, p.tanggal, a.status, a.surat_ijin "
+                + "FROM pertemuan p "
+                + "LEFT JOIN absen a ON a.id_pertemuan = p.id_pertemuan "
+                + "  AND a.NIM = ? "
+                + "WHERE p.kode_kelas = ? "
+                + "ORDER BY p.pertemuan_ke";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, nim);
@@ -39,7 +43,8 @@ public class AbsensiMhsDAO {
                     AbsensiSAMod row = new AbsensiSAMod(
                             rs.getInt("pertemuan_ke"),
                             rs.getString("tanggal"),
-                            rs.getString("status")
+                            rs.getString("status"),
+                            rs.getString("surat_ijin")
                     );
                     list.add(row);
                 }

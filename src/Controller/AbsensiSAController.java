@@ -14,13 +14,13 @@ import java.util.List;
  */
 public class AbsensiSAController {
 
-    private final AbsensiMhsDAO absenDao;
+    private final AbsensiMhsDAO absenMhsDao;
 
     public AbsensiSAController(AbsensiMhsDAO dao) {
-        this.absenDao = dao;
+        this.absenMhsDao = dao;
     }
 
     public List<AbsensiSAMod> getAbsensiMahasiswaKelas(String nim, String kodeKelas) {
-        return absenDao.getAbsensiMahasiswaKelas(nim, kodeKelas);
+        return absenMhsDao.getAbsensiMahasiswaKelas(nim, kodeKelas);
     }
 }
