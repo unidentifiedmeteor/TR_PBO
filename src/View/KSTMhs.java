@@ -91,19 +91,19 @@ public class KSTMhs extends javax.swing.JFrame {
     }
 
     private static class ButtonRenderer extends JButton implements TableCellRenderer {
+
         public ButtonRenderer() {
             setOpaque(true);
         }
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
-                                                       boolean isSelected, boolean hasFocus,
-                                                       int row, int column) {
+                boolean isSelected, boolean hasFocus,
+                int row, int column) {
             setText(value == null ? "" : value.toString());
             return this;
         }
     }
-
 
     private class ButtonEditor extends DefaultCellEditor {
 
@@ -118,11 +118,48 @@ public class KSTMhs extends javax.swing.JFrame {
             button.addActionListener(e -> {
                 try {
                     int modelRow = jTable1.convertRowIndexToModel(row);
-                    String kodeKelas =
-                            jTable1.getModel().getValueAt(modelRow, 0).toString();
-                    System.out.println("Iya udah presensi");
+                    String kodeKelas = jTable1.getModel().getValueAt(modelRow, 0).toString();
+
+                    String[] options = {"Presensi HADIR", "Upload Surat Ijin", "Batal"};
+                    int pilih = JOptionPane.showOptionDialog(
+                            KSTMhs.this,
+                            "Pilih aksi untuk kelas: " + kodeKelas,
+                            "Presensi",
+                            JOptionPane.DEFAULT_OPTION,
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            options,
+                            options[0]
+                    );
+
+                    if (pilih == 0) {
+                        // PRESENSI HADIR
+                        controller.presensiHadir(nim, kodeKelas);
+                        jTable1.getModel().setValueAt("HADIR", modelRow, 7);
+                        JOptionPane.showMessageDialog(KSTMhs.this,
+                                "Presensi HADIR berhasil.");
+
+                    } else if (pilih == 1) {
+                        // UPLOAD SURAT IJIN
+                        JFileChooser chooser = new JFileChooser();
+                        chooser.setDialogTitle("Pilih file surat ijin");
+
+                        int res = chooser.showOpenDialog(KSTMhs.this);
+                        if (res == JFileChooser.APPROVE_OPTION) {
+                            java.io.File file = chooser.getSelectedFile();
+
+                            controller.uploadSuratIjin(nim, kodeKelas, file);
+                            jTable1.getModel().setValueAt("IZIN", modelRow, 7);
+
+                            JOptionPane.showMessageDialog(KSTMhs.this,
+                                    "Surat ijin berhasil di-upload.");
+                        }
+                    }
+
                 } catch (Exception ex) {
                     ex.printStackTrace();
+                    JOptionPane.showMessageDialog(KSTMhs.this,
+                            "Terjadi error: " + ex.getMessage());
                 } finally {
                     fireEditingStopped();
                 }
@@ -131,7 +168,7 @@ public class KSTMhs extends javax.swing.JFrame {
 
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value,
-                                                     boolean isSelected, int row, int column) {
+                boolean isSelected, int row, int column) {
             this.row = row;
             label = (value == null) ? "" : value.toString();
             button.setText(label);
